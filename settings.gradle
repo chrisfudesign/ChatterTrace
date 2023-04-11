@@ -5,6 +5,15 @@ dependencyResolutionManagement {
         mavenCentral()
         jcenter() // Warning: this repository is going to shut down soon
     }
+
+    pluginManagement {
+        repositories {
+            gradlePluginPortal()
+            google()
+            mavenCentral()
+        }
+    }
 }
+
 rootProject.name = "Chatter Trace"
 include ':app'
