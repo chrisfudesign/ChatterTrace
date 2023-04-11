@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class RecordingsViewModel : ViewModel() {
-
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is recordings fragment"
-    }
-    val text: LiveData<String> = _text
+    // manipulating the data from the variables in the fragment
+//    private val _text = MutableLiveData<String>().apply {
+//        value = "This is recordings fragment"
+//    }
+//    val text: LiveData<String> = _text
 }

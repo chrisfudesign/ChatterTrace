@@ -8,12 +8,12 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.washington.chattertrace.databinding.FragmentNotificationsBinding
+import com.washington.chattertrace.databinding.FragmentReflectionsBinding
 
 class ReflectionsFragment : Fragment() {
 
-    private lateinit var notificationsViewModel: ReflectionsViewModel
-    private var _binding: FragmentNotificationsBinding? = null
+    private lateinit var recordingsViewModel: ReflectionsViewModel
+    private var _binding: FragmentReflectionsBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -24,14 +24,14 @@ class ReflectionsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        notificationsViewModel =
+        recordingsViewModel =
             ViewModelProvider(this).get(ReflectionsViewModel::class.java)
 
-        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
+        _binding = FragmentReflectionsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textNotifications
-        notificationsViewModel.text.observe(viewLifecycleOwner, Observer {
+        val textView: TextView = binding.textReflections
+        recordingsViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root

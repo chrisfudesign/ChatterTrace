@@ -15,11 +15,11 @@
         android:id="@+id/navigation_dashboard"
         android:name="com.washington.chattertrace.ui.recordings.RecordingsFragment"
         android:label="@string/title_recordings"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_recordings" />
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.washington.chattertrace.ui.reflections.ReflectionsFragment"
         android:label="@string/title_reflections"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_reflections" />
 </navigation>

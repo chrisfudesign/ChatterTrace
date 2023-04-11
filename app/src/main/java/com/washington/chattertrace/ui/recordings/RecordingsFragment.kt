@@ -8,12 +8,13 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.washington.chattertrace.databinding.FragmentDashboardBinding
+import androidx.recyclerview.widget.RecyclerView
+import com.washington.chattertrace.databinding.FragmentRecordingsBinding
 
 class RecordingsFragment : Fragment() {
 
-    private lateinit var dashboardViewModel: RecordingsViewModel
-    private var _binding: FragmentDashboardBinding? = null
+    private lateinit var recordingsViewModel: RecordingsViewModel
+    private var _binding: FragmentRecordingsBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -24,16 +25,16 @@ class RecordingsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        dashboardViewModel =
+        recordingsViewModel =
             ViewModelProvider(this).get(RecordingsViewModel::class.java)
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentRecordingsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
-        dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
+        val recyclerView: RecyclerView = binding.recordingFolders
+//        recordingsViewModel.text.observe(viewLifecycleOwner, Observer {
+//            textView.text = it
+//        })
         return root
     }
 

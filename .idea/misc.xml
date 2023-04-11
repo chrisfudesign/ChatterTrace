@@ -5,11 +5,18 @@
       <map>
         <entry key="..\:/Users/lynnx/Documents/ChatterTrace/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2625" />
         <entry key="..\:/Users/lynnx/Documents/ChatterTrace/app/src/main/res/drawable/home_icon.xml" value="0.14114583333333333" />
+        <entry key="..\:/Users/lynnx/Documents/ChatterTrace/app/src/main/res/drawable/ic_baseline_arrow_forward_ios_24.xml" value="0.2625" />
         <entry key="..\:/Users/lynnx/Documents/ChatterTrace/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.2625" />
         <entry key="..\:/Users/lynnx/Documents/ChatterTrace/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.2625" />
         <entry key="..\:/Users/lynnx/Documents/ChatterTrace/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.2625" />
+        <entry key="..\:/Users/lynnx/Documents/ChatterTrace/app/src/main/res/drawable/ic_outline_folder_24.xml" value="0.14114583333333333" />
+        <entry key="..\:/Users/lynnx/Documents/ChatterTrace/app/src/main/res/drawable/upload.xml" value="0.2625" />
         <entry key="..\:/Users/lynnx/Documents/ChatterTrace/app/src/main/res/layout/activity_main.xml" value="0.1793478260869565" />
         <entry key="..\:/Users/lynnx/Documents/ChatterTrace/app/src/main/res/layout/fragment_dashboard.xml" value="0.22010869565217392" />
+        <entry key="..\:/Users/lynnx/Documents/ChatterTrace/app/src/main/res/layout/fragment_home.xml" value="0.125" />
+        <entry key="..\:/Users/lynnx/Documents/ChatterTrace/app/src/main/res/layout/fragment_notifications.xml" value="0.125" />
+        <entry key="..\:/Users/lynnx/Documents/ChatterTrace/app/src/main/res/layout/fragment_recordings.xml" value="0.125" />
+        <entry key="..\:/Users/lynnx/Documents/ChatterTrace/app/src/main/res/layout/recording_folder_row.xml" value="0.4" />
         <entry key="..\:/Users/lynnx/Documents/ChatterTrace/app/src/main/res/menu/bottom_nav_menu.xml" value="0.24635416666666668" />
       </map>
     </option>
