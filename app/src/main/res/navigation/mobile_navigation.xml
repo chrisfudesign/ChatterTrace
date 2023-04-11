@@ -13,13 +13,13 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.washington.chattertrace.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
+        android:name="com.washington.chattertrace.ui.recordings.RecordingsFragment"
+        android:label="@string/title_recordings"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.washington.chattertrace.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
+        android:name="com.washington.chattertrace.ui.reflections.ReflectionsFragment"
+        android:label="@string/title_reflections"
         tools:layout="@layout/fragment_notifications" />
 </navigation>

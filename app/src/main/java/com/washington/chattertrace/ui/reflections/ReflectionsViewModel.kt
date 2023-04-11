@@ -1,13 +1,13 @@
-package com.washington.chattertrace.ui.dashboard
+package com.washington.chattertrace.ui.reflections
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class DashboardViewModel : ViewModel() {
+class ReflectionsViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is dashboard Fragment"
+        value = "This is daily reflections fragment"
     }
     val text: LiveData<String> = _text
 }
