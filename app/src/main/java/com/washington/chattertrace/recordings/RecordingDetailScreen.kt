@@ -1,4 +1,4 @@
-package com.washington.chattertrace.home
+package com.washington.chattertrace.recordings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.sp
 import com.washington.chattertrace.R
 
 @Composable
-fun HomeScreen() {
+fun RecordingDetailScreen(itemId: String) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -24,7 +24,7 @@ fun HomeScreen() {
             .wrapContentSize(Alignment.Center)
     ) {
         Text(
-            text = "Home Screen",
+            text = itemId,
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp,
             color = colorResource(id = R.color.primary),
