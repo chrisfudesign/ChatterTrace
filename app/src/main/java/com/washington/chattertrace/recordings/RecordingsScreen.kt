@@ -2,15 +2,12 @@ package com.washington.chattertrace.recordings
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.ui.Alignment
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -25,8 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.washington.chattertrace.R
-import com.washington.chattertrace.data.dummyData;
 import com.washington.chattertrace.data.RecordingFolder;
+import com.washington.chattertrace.data.folderList
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,7 +49,7 @@ fun RecordingsScreen(navController: NavHostController) {
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(Color.White)
         )
 
-        FolderList(folders = dummyData, navController);
+        FolderList(navController);
     }
 
 
@@ -64,13 +61,14 @@ fun RecordingsScreen(navController: NavHostController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FolderList(folders: List<RecordingFolder>, navController: NavHostController) {
+fun FolderList(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
         Column {
+            val folders = folderList;
             folders.forEach { folder ->
                 FolderRow(folder,  navController)
             }
@@ -92,7 +90,8 @@ fun FolderRow(folder: RecordingFolder, navController: NavHostController) {
             )
             .clickable {
                 // TODO: figure out how to pass in the folder item or find infrastructure to do so
-                navController.navigate("recordingDetail/${folder.id}") {
+                var date = "${folder.date.monthValue}-${folder.date.dayOfMonth}"
+                navController.navigate("recordingDetail/${date}") {
                     // Pop up to the start destination of the graph to
                     // avoid building up a large stack of destinations
                     // on the back stack as users select items

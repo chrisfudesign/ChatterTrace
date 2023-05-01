@@ -34,17 +34,16 @@ fun Navigation(navController: NavHostController) {
         composable(NavigationItem.Reflections.route) {
             ReflectionsScreen(navController)
         }
-        composable("recordingDetail/{id}") {
-            val id = it.arguments?.getString("id")
-            if (id != null) {
-                RecordingDetailScreen(id)
+        composable("recordingDetail/{date}") {
+            val date = it.arguments?.getString("date")
+            if (date != null) {
+                RecordingDetailScreen(date)
             }
         }
         composable("reflectionDetail/{date}") {
             val date = it.arguments?.getString("date")
-            print(date);
             if (date != null) {
-                ReflectionDetailScreen(date)
+                ReflectionDetailScreen(navController, date)
             }
         }
     }

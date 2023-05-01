@@ -22,8 +22,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.washington.chattertrace.data.dummyData;
 import com.washington.chattertrace.data.RecordingFolder;
+import com.washington.chattertrace.data.folderList
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,7 +49,7 @@ fun ReflectionsScreen(navController: NavHostController) {
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(Color.White)
         )
 
-        FolderList(folders = dummyData, navController);
+        FolderList(navController);
     }
 
 
@@ -61,13 +61,14 @@ fun ReflectionsScreen(navController: NavHostController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FolderList(folders: List<RecordingFolder>, navController: NavHostController) {
+fun FolderList(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
         Column {
+            val folders = folderList
             folders.forEach { folder ->
                 FolderRow(folder, false, navController)
             }

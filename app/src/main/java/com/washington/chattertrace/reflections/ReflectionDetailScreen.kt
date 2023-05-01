@@ -18,11 +18,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.washington.chattertrace.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReflectionDetailScreen(date: String) {
+fun ReflectionDetailScreen(navController: NavHostController, date: String) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -41,7 +42,7 @@ fun ReflectionDetailScreen(date: String) {
                 )
             },
             navigationIcon = {
-                IconButton(onClick = { /* TODO: Handle back button click */ }) {
+                IconButton(onClick = { /*navController.popBackStack()*/ }) {
                     Icon(Icons.Default.ArrowBack, contentDescription = "Back button")
                 }
             },
