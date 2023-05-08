@@ -3,10 +3,8 @@ package com.washington.chattertrace.home
 import android.widget.RadioGroup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,7 +45,9 @@ fun HomeScreen() {
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
             color = colorResource(id = R.color.light_text),
-            modifier = Modifier.fillMaxWidth().padding(start = 47.dp, end = 47.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 47.dp, end = 47.dp),
             lineHeight = 24.sp,
             textAlign = TextAlign.Center
         )
@@ -57,7 +57,9 @@ fun HomeScreen() {
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             color = colorResource(id = R.color.light_text),
-            modifier = Modifier.fillMaxWidth().padding(top = 40.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 40.dp),
             lineHeight = 24.sp,
             textAlign = TextAlign.Center
         )
@@ -67,14 +69,38 @@ fun HomeScreen() {
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
             color = colorResource(id = R.color.light_text),
-            modifier = Modifier.fillMaxWidth().padding(top = 11.dp, start = 24.dp, end = 24.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 11.dp, start = 24.dp, end = 24.dp),
             lineHeight = 24.sp,
             textAlign = TextAlign.Center
         )
 
         // time select radio buttons
-        val radioOptions = listOf(15, 30, 60, 90, 120, 180)
+        val radioOptions = listOf(15, 30, 60, 90, 120)
         var selectedOptionIndex by remember { mutableStateOf(0) }
+
+        Row(
+            Modifier.fillMaxWidth().padding(top = 30.dp, start = 9.dp, end = 9.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            radioOptions.forEach { text ->
+                OutlinedButton(
+                    onClick = { /* Handle button click */ },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White,
+                        contentColor = colorResource(id = R.color.primary),
+                        ),
+                    shape = RoundedCornerShape(100.dp),
+                    modifier = Modifier.padding(start = 2.dp, end = 2.dp)
+                ) {
+                    Text(
+                        text ="$text",
+                        fontSize = 10.sp)
+                }
+
+            }
+        }
 
 
         Text(
@@ -82,7 +108,9 @@ fun HomeScreen() {
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             color = colorResource(id = R.color.light_text),
-            modifier = Modifier.fillMaxWidth().padding(top = 40.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 40.dp),
             lineHeight = 24.sp,
             textAlign = TextAlign.Center
         )
