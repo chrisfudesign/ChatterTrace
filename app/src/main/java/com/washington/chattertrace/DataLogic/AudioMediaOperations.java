@@ -1,7 +1,5 @@
-package com.washington.chattertrace.Data;
+package com.washington.chattertrace.DataLogic;
 
-
-import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

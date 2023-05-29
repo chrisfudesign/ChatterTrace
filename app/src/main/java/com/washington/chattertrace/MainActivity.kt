@@ -20,8 +20,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
-import com.washington.chattertrace.Data.DataManager
-import com.washington.chattertrace.Data.dummyDataSetup
+import com.washington.chattertrace.DataLogic.DataManager
+import com.washington.chattertrace.data.dummyDataSetup
 import com.washington.chattertrace.RecordingLogic.RecordingManager
 import java.io.IOException
 

@@ -2,7 +2,6 @@ package com.washington.chattertrace
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.ui.Alignment
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -22,8 +21,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.washington.chattertrace.Data.RecordingFolder;
-import com.washington.chattertrace.Data.folderList
+import com.washington.chattertrace.data.RecordingFolder
+import com.washington.chattertrace.data.folderList
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)

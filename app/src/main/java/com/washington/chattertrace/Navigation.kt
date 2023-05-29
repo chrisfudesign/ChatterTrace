@@ -14,7 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.washington.chattertrace.Data.DataManager
+import com.washington.chattertrace.DataLogic.DataManager
 import com.washington.chattertrace.RecordingLogic.RecordingManager
 import com.washington.chattertrace.home.HomeScreen
 import com.washington.chattertrace.recordings.RecordingsScreen

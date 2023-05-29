@@ -1,4 +1,4 @@
-package com.washington.chattertrace.Data;
+package com.washington.chattertrace.DataLogic;
 
 import androidx.room.Dao;
 import androidx.room.Delete;

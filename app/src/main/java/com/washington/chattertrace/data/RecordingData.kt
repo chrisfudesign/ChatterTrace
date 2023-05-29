@@ -1,4 +1,4 @@
-package com.washington.chattertrace.Data;
+package com.washington.chattertrace.data
 
 import java.time.LocalDate
 import java.time.LocalTime

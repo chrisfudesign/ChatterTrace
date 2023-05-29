@@ -1,4 +1,4 @@
-package com.washington.chattertrace.Data;
+package com.washington.chattertrace.DataLogic;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.washington.chattertrace.R
-import com.washington.chattertrace.Data.RecordingFolder;
-import com.washington.chattertrace.Data.folderList
+import com.washington.chattertrace.data.RecordingFolder
+import com.washington.chattertrace.data.folderList
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -17,7 +17,7 @@ import android.os.SystemClock;
 
 import androidx.core.app.NotificationCompat;
 
-import com.washington.chattertrace.Data.DataManager;
+import com.washington.chattertrace.DataLogic.DataManager;
 import com.washington.chattertrace.R;
 
 

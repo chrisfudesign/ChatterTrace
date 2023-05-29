@@ -13,7 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.washington.chattertrace.Data.DataManager
+import com.washington.chattertrace.DataLogic.DataManager
 import com.washington.chattertrace.R
 import com.washington.chattertrace.RecordingLogic.RecordingManager
 
