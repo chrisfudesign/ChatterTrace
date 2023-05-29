@@ -5,7 +5,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10' // Update the Kotlin version here
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.21'
+        // Update the Kotlin version here
         classpath 'com.android.tools.build:gradle:7.1.0' // Update the AGP version to 7.1.0 or a newer compatible version
 
 

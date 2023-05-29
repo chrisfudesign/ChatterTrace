@@ -9,10 +9,51 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.washington.chattertrace.Data.DataManager
+import com.washington.chattertrace.RecordingLogic.RecordingManager
+import com.washington.chattertrace.home.HomeScreen
+import com.washington.chattertrace.recordings.RecordingsScreen
+import com.washington.chattertrace.recordings.RecordingDetailScreen
+import com.washington.chattertrace.reflections.ReflectionDetailScreen
 
+/*
+ * Navigation Router
+ */
+@Composable
+fun Navigation(navController: NavHostController, recordingManager: RecordingManager?, dataManager: DataManager?) {
+    NavHost(navController, startDestination = NavigationItem.Home.route) {
+        composable(NavigationItem.Home.route) {
+            HomeScreen(recordingManager = recordingManager, dataManager = dataManager)
+        }
+        composable(NavigationItem.Recordings.route) {
+            RecordingsScreen(navController)
+        }
+        composable(NavigationItem.Reflections.route) {
+            ReflectionsScreen(navController)
+        }
+        composable("recordingDetail/{date}") {
+            val date = it.arguments?.getString("date")
+            if (date != null) {
+                RecordingDetailScreen(date)
+            }
+        }
+        composable("reflectionDetail/{date}") {
+            val date = it.arguments?.getString("date")
+            if (date != null) {
+                ReflectionDetailScreen(navController, date)
+            }
+        }
+    }
+}
+
+/*
+ * Bottom Navigation Bar
+ */
 @Composable
 fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
@@ -53,10 +94,4 @@ fun BottomNavigationBar(navController: NavController) {
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun BottomNavigationBarPreview() {
-//    BottomNavigationBar()
 }

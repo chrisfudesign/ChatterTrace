@@ -1,42 +1,134 @@
 package com.washington.chattertrace.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.washington.chattertrace.Data.DataManager
 import com.washington.chattertrace.R
+import com.washington.chattertrace.RecordingLogic.RecordingManager
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .wrapContentSize(Alignment.Center)
+            .wrapContentWidth(Alignment.CenterHorizontally)
     ) {
+        CenterAlignedTopAppBar(
+            // header text
+            title = {
+                Text(
+                    text = "Session Recording",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp,
+                    color = Color.Black,
+                    textAlign = TextAlign.Center
+                )
+            },
+            modifier = Modifier.padding(top = 16.dp),
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(Color.White)
+        )
+
         Text(
-            text = "Home Screen",
-            fontWeight = FontWeight.Bold,
-            fontSize = 24.sp,
-            color = colorResource(id = R.color.primary),
-            modifier = Modifier.align(Alignment.CenterHorizontally),
+            text = "Select the START button to begin a new session recording.",
+            fontWeight = FontWeight.Normal,
+            fontSize = 16.sp,
+            color = colorResource(id = R.color.light_text),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 47.dp, end = 47.dp),
+            lineHeight = 24.sp,
             textAlign = TextAlign.Center
         )
-    }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen()
+        Text(
+            text = "Session Timer (minutes)",
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            color = colorResource(id = R.color.light_text),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 40.dp),
+            lineHeight = 24.sp,
+            textAlign = TextAlign.Center
+        )
+
+        Text(
+            text = "Optionally select a recording timer. Recordings will automatically stop at 180 minutes.",
+            fontWeight = FontWeight.Normal,
+            fontSize = 16.sp,
+            color = colorResource(id = R.color.light_text),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 11.dp, start = 24.dp, end = 24.dp),
+            lineHeight = 24.sp,
+            textAlign = TextAlign.Center
+        )
+
+        // time select radio buttons
+        val radioOptions = listOf(15, 30, 60, 90, 120)
+        var selectedOptionIndex by remember { mutableStateOf(0) }
+
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(top = 30.dp, start = 9.dp, end = 9.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            radioOptions.forEach { text ->
+                OutlinedButton(
+                    onClick = { /* Handle button click */ },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White,
+                        contentColor = colorResource(id = R.color.primary),
+                        ),
+                    shape = RoundedCornerShape(100.dp),
+                    modifier = Modifier.padding(start = 2.dp, end = 2.dp)
+                ) {
+                    Text(
+                        text ="$text",
+                        fontSize = 10.sp)
+                }
+
+            }
+        }
+
+
+        Text(
+            text = "Recording Time",
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            color = colorResource(id = R.color.light_text),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 40.dp),
+            lineHeight = 24.sp,
+            textAlign = TextAlign.Center
+        )
+
+        Button(onClick = {
+            recordingManager?.StartRecording(dataManager?.getRecordingNameOfTime(), 60 * 180)
+        }) {
+
+        }
+
+        Button(onClick = {
+            if (recordingManager?.isRecording() == true)
+                recordingManager?.StopRecording();
+        }) {
+
+        }
+    }
 }

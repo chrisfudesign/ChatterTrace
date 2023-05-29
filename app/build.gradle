@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'com.google.relay' version '0.3.05'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
@@ -40,19 +41,26 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
         freeCompilerArgs += ['-Xjvm-default=enable'] // Add this line
-        useIR = true
     }
     buildFeatures {
         viewBinding true
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.1.1"
+        kotlinCompilerExtensionVersion = "1.4.7"
         kotlinCompilerVersion '1.4.21-2'
     }
 }
 
 dependencies {
+    implementation 'androidx.core:core-ktx:+'
+    def room_version = "2.5.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    implementation("androidx.annotation:annotation:1.6.0")
+    implementation 'com.kailashdabhi:om-recorder:1.1.5'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
     implementation "androidx.compose.material3:material3:1.0.1"
     implementation "androidx.compose.material3:material3-window-size-class:1.0.1"
     implementation "androidx.activity:activity-compose:1.3.0-alpha03"
