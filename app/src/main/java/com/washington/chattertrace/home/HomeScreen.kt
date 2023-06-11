@@ -122,11 +122,18 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
             recordingManager?.StartRecording(dataManager?.getRecordingNameOfTime(), 60 * 180)
         }) {
 
+
         }
 
         Button(onClick = {
             if (recordingManager?.isRecording() == true)
                 recordingManager?.StopRecording();
+        }) {
+
+        }
+
+        Button(onClick = {
+            dataManager?.classifyAudio()
         }) {
 
         }
