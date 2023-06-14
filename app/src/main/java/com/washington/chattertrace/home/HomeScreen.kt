@@ -1,5 +1,6 @@
 package com.washington.chattertrace.home
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -93,13 +94,14 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.White,
                         contentColor = colorResource(id = R.color.primary),
-                        ),
+                    ),
                     shape = RoundedCornerShape(100.dp),
                     modifier = Modifier.padding(start = 2.dp, end = 2.dp)
                 ) {
                     Text(
-                        text ="$text",
-                        fontSize = 10.sp)
+                        text = "$text",
+                        fontSize = 10.sp
+                    )
                 }
 
             }
@@ -118,17 +120,47 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
             textAlign = TextAlign.Center
         )
 
-        Button(onClick = {
-            recordingManager?.StartRecording(dataManager?.getRecordingNameOfTime(), 60 * 180)
-        }) {
+        if (recordingManager?.isRecording() == false) {
+            Button(
+                onClick = {
+                    recordingManager?.StartRecording(dataManager?.getRecordingNameOfTime(), 60 * 180)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorResource(id = R.color.primary),
+                    contentColor = Color.White,
+                ),
+                shape = RoundedCornerShape(100.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 30.dp, start = 25.dp, end = 25.dp),
+            ) {
+                Text(
+                    text = "Start Study Session",
+                    fontSize = 20.sp
+                )
+            }
 
-        }
+        } else {
+            Button(
+                onClick = {
+                    recordingManager?.StopRecording();
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = colorResource(id = R.color.primary),
 
-        Button(onClick = {
-            if (recordingManager?.isRecording() == true)
-                recordingManager?.StopRecording();
-        }) {
-
+                ),
+                border = BorderStroke(1.dp, colorResource(id = R.color.outline)),
+                shape = RoundedCornerShape(100.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 30.dp, start = 25.dp, end = 25.dp),
+            ) {
+                Text(
+                    text = "End Now",
+                    fontSize = 20.sp
+                )
+            }
         }
     }
 }
