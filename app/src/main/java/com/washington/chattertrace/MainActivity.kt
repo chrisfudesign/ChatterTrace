@@ -33,8 +33,8 @@ class MainActivity : ComponentActivity() {
     var context: Context? = null
     private val REQUEST_ID_MULTIPLE_PERMISSIONS = 1
     private var serviceBound = false
-    private val preceding_time = 10 // PAY ATTENTION TO THIS
-    private val preceding_mode = true // PAY ATTENTION TO THIS
+    private val preceding_time = 0 // PAY ATTENTION TO THIS
+    private val preceding_mode = false // PAY ATTENTION TO THIS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,9 +50,6 @@ class MainActivity : ComponentActivity() {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-
-        //check for necessary permissions
-
         //check for necessary permissions
         if (checkAndRequestPermissions()) {
             StartService()
@@ -119,7 +116,7 @@ class MainActivity : ComponentActivity() {
             println(recordingManager?.isRecording())
             //for auto-recording
 //            updateRecordSettings()
-            recordingManager?.setPrecedingTime(10)
+//            recordingManager?.setPrecedingTime(10)
 
             if (preceding_time > 0 && preceding_mode) {
                 recordingManager?.StartRecordingSilently(

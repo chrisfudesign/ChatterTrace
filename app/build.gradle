@@ -52,7 +52,10 @@ android {
     }
 }
 
+project.ext.ASSET_DIR = projectDir.toString() + '/src/main/assets'
+
 dependencies {
+    implementation 'org.tensorflow:tensorflow-lite-task-audio:0.4.0'
     implementation 'androidx.core:core-ktx:+'
     def room_version = "2.5.1"
     implementation("androidx.room:room-runtime:$room_version")

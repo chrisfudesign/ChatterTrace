@@ -21,6 +21,8 @@ import com.washington.chattertrace.RecordingLogic.RecordingManager
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
+    var isButtonClicked by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -120,10 +122,11 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
             textAlign = TextAlign.Center
         )
 
-        if (recordingManager?.isRecording() == false) {
+        if (!isButtonClicked) {
             Button(
                 onClick = {
-                    recordingManager?.StartRecording(dataManager?.getRecordingNameOfTime(), 60 * 180)
+                    recordingManager?.StartRecording(dataManager?.getRecordingNameOfTime(), 60 * 180);
+                    isButtonClicked = !isButtonClicked
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colorResource(id = R.color.primary),
@@ -139,11 +142,13 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
                     fontSize = 20.sp
                 )
             }
-
         } else {
             Button(
                 onClick = {
-                    recordingManager?.StopRecording();
+                    if (recordingManager?.isRecording() == true) {
+                        recordingManager?.StopRecording();
+                    }
+                    isButtonClicked = !isButtonClicked
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
@@ -161,6 +166,15 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
                     fontSize = 20.sp
                 )
             }
+        }
+
+        Button(onClick = {
+            dataManager?.classifyAudio()
+        }) {
+            Text(
+                text = "Classify Audio",
+                fontSize = 20.sp
+            )
         }
     }
 }
