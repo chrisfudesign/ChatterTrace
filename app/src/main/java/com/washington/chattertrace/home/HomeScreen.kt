@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,9 +24,9 @@ import kotlinx.coroutines.delay
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
-    var isButtonClicked by remember { mutableStateOf(false) }
+    var isButtonClicked by rememberSaveable { mutableStateOf(false) }
 
-    var elapsedTime by remember { mutableStateOf(0L) }
+    var elapsedTime by rememberSaveable { mutableStateOf(0L) }
 
     val scope = rememberCoroutineScope()
 
@@ -145,7 +146,7 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
             var time = formatTime(elapsedTime)
             Text(
                 text = time.substring(0, 2),
-                fontSize = 80.sp,
+                fontSize = 70.sp,
                 modifier = Modifier
                     .background(
                         color = colorResource(id = R.color.light_surface),
@@ -155,11 +156,12 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
             )
             Text(
                 text = ":",
-                fontSize = 80.sp
+                fontSize = 70.sp,
+                modifier = Modifier.padding(8.dp, 0.dp)
             )
             Text(
                 text = time.substring(3),
-                fontSize = 80.sp,
+                fontSize = 70.sp,
                 modifier = Modifier
                     .border(
                         BorderStroke(2.dp, colorResource(id = R.color.primary)),
@@ -228,7 +230,7 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
 }
 
 private fun formatTime(timeInSeconds: Long): String {
-    val minutes = (timeInSeconds / 60).toString().padStart(2, '0')
-    val seconds = (timeInSeconds % 60).toString().padStart(2, '0')
-    return "$minutes:$seconds"
+    val hours = (timeInSeconds / 3600).toString().padStart(2, '0')
+    val minutes = ((timeInSeconds % 3600) / 60).toString().padStart(2, '0')
+    return "$hours:$minutes"
 }
