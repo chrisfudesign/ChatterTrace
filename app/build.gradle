@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
   // adding ui-package folder, see https://youtu.be/CMXXHLwA2io?t=370
 
     sourceSets {
@@ -19,7 +19,7 @@ android {
     defaultConfig {
         applicationId "com.washington.chattertrace"
         minSdk 27
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 

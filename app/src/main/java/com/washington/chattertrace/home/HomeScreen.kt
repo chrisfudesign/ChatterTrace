@@ -2,6 +2,7 @@ package com.washington.chattertrace.home
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -17,11 +18,25 @@ import androidx.compose.ui.unit.sp
 import com.washington.chattertrace.DataLogic.DataManager
 import com.washington.chattertrace.R
 import com.washington.chattertrace.RecordingLogic.RecordingManager
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
     var isButtonClicked by remember { mutableStateOf(false) }
+
+    var elapsedTime by remember { mutableStateOf(0L) }
+
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(isButtonClicked) {
+        if (isButtonClicked) {
+            while (true) {
+                delay(1000L) // Delay for 1 second
+                elapsedTime += 1L
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -109,7 +124,6 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
             }
         }
 
-
         Text(
             text = "Recording Time",
             fontWeight = FontWeight.Bold,
@@ -121,6 +135,39 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
             lineHeight = 24.sp,
             textAlign = TextAlign.Center
         )
+
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(top = 30.dp, start = 9.dp, end = 9.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            var time = formatTime(elapsedTime)
+            Text(
+                text = time.substring(0, 2),
+                fontSize = 80.sp,
+                modifier = Modifier
+                    .background(
+                        color = colorResource(id = R.color.light_surface),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(16.dp, 0.dp)
+            )
+            Text(
+                text = ":",
+                fontSize = 80.sp
+            )
+            Text(
+                text = time.substring(3),
+                fontSize = 80.sp,
+                modifier = Modifier
+                    .border(
+                        BorderStroke(2.dp, colorResource(id = R.color.primary)),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(16.dp, 0.dp)
+            )
+        }
 
         if (!isButtonClicked) {
             Button(
@@ -135,7 +182,7 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
                 shape = RoundedCornerShape(100.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 30.dp, start = 25.dp, end = 25.dp),
+                    .padding(top = 30.dp, start = 30.dp, end = 30.dp),
             ) {
                 Text(
                     text = "Start Study Session",
@@ -147,6 +194,7 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
                 onClick = {
                     if (recordingManager?.isRecording() == true) {
                         recordingManager?.StopRecording();
+                        elapsedTime = 0L
                     }
                     isButtonClicked = !isButtonClicked
                 },
@@ -159,7 +207,7 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
                 shape = RoundedCornerShape(100.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 30.dp, start = 25.dp, end = 25.dp),
+                    .padding(top = 30.dp, start = 30.dp, end = 30.dp),
             ) {
                 Text(
                     text = "End Now",
@@ -177,4 +225,10 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
             )
         }
     }
+}
+
+private fun formatTime(timeInSeconds: Long): String {
+    val minutes = (timeInSeconds / 60).toString().padStart(2, '0')
+    val seconds = (timeInSeconds % 60).toString().padStart(2, '0')
+    return "$minutes:$seconds"
 }
