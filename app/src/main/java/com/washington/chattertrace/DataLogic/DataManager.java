@@ -561,12 +561,13 @@ public class DataManager {
                 File file = new File(item.path);
                 file.delete();
             }
-        }
-        currentlyProcessingAudioFile = newitem.path;
-        boolean classificationResult = classifyAudio();
-        if (classificationResult) {
-            NotificationHelper.showNotification(context, "Possible bid for connection?", "It seems that your family member just made a bid for connection, please click this to record a response.");
-            // GET THE LOGIC OF RECORDING 30s+1min CORRECT
+
+            currentlyProcessingAudioFile = newitem.path;
+            boolean classificationResult = classifyAudio();
+            if (classificationResult) {
+                NotificationHelper.showNotification(context, "Possible bid for connection?", "It seems that your family member just made a bid for connection, please click this to record a response.");
+                // GET THE LOGIC OF RECORDING 30s+1min CORRECT
+            }
         }
         deleteFilesOutOfMaxFiles();
         processUpload(filename, shouldkeep);
