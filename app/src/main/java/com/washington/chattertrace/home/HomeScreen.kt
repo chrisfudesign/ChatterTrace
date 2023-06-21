@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.washington.chattertrace.DataLogic.DataManager
+import com.washington.chattertrace.DataLogic.NotificationHelper
 import com.washington.chattertrace.R
 import com.washington.chattertrace.RecordingLogic.RecordingManager
 import kotlinx.coroutines.delay
@@ -29,6 +30,10 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
     var elapsedTime by rememberSaveable { mutableStateOf(0L) }
 
     val scope = rememberCoroutineScope()
+
+    val preceding_time = 30 // Record 30s in advance
+    val preceding_mode = true
+    val record_time_after_user_tap = 60 // After user tap, record 60s more so the total file would be 90s long
 
     LaunchedEffect(isButtonClicked) {
         if (isButtonClicked) {
@@ -174,7 +179,14 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
         if (!isButtonClicked) {
             Button(
                 onClick = {
-                    recordingManager?.StartRecording(dataManager?.getRecordingNameOfTime(), 60 * 180);
+                    recordingManager?.setPrecedingTime(preceding_time)
+                    if (preceding_time > 0 && preceding_mode) {
+                        recordingManager?.StartRecordingSilently(
+                            dataManager?.getRecordingNameOfTimeWithPrefix(
+                                "preceding"
+                            ), preceding_time
+                        )
+                    }
                     isButtonClicked = !isButtonClicked
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -195,9 +207,13 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
             Button(
                 onClick = {
                     if (recordingManager?.isRecording() == true) {
-                        recordingManager?.StopRecording();
+                        recordingManager.StopRecordingSilently()
                         elapsedTime = 0L
                     }
+//                    if (recordingManager?.isRecording() == true) {
+//                        recordingManager?.StopRecording();
+//                        elapsedTime = 0L
+//                    }
                     isButtonClicked = !isButtonClicked
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -219,10 +235,10 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
         }
 
         Button(onClick = {
-            dataManager?.classifyAudio()
+            recordingManager?.StartRecording(dataManager?.getRecordingNameOfTimeWithPrefix(""), record_time_after_user_tap)
         }) {
             Text(
-                text = "Classify Audio",
+                text = "Mimic tap on notification",
                 fontSize = 20.sp
             )
         }
