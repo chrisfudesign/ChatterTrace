@@ -1,6 +1,5 @@
 package com.washington.chattertrace.DataLogic;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -12,7 +11,6 @@ import android.os.Bundle;
 import androidx.core.app.NotificationCompat;
 
 import com.washington.chattertrace.MainActivity;
-import com.washington.chattertrace.NotificationActionReceiver;
 import com.washington.chattertrace.R;
 
 public class NotificationHelper {
