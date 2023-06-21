@@ -143,29 +143,14 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
                 .padding(top = 30.dp, start = 9.dp, end = 9.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            var time = formatTime(elapsedTime)
             Text(
-                text = time.substring(0, 2),
+                text = formatTime(elapsedTime),
                 fontSize = 70.sp,
+                color = colorResource(id = R.color.primary),
                 modifier = Modifier
                     .background(
                         color = colorResource(id = R.color.light_surface),
-                        shape = RoundedCornerShape(8.dp)
-                    )
-                    .padding(16.dp, 0.dp)
-            )
-            Text(
-                text = ":",
-                fontSize = 70.sp,
-                modifier = Modifier.padding(8.dp, 0.dp)
-            )
-            Text(
-                text = time.substring(3),
-                fontSize = 70.sp,
-                modifier = Modifier
-                    .border(
-                        BorderStroke(2.dp, colorResource(id = R.color.primary)),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
                     )
                     .padding(16.dp, 0.dp)
             )
@@ -231,6 +216,7 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
 
 private fun formatTime(timeInSeconds: Long): String {
     val hours = (timeInSeconds / 3600).toString().padStart(2, '0')
-    val minutes = ((timeInSeconds % 3600) / 60).toString().padStart(2, '0')
-    return "$hours:$minutes"
+    val minutes = (timeInSeconds / 60).toString().padStart(2, '0')
+    val seconds = (timeInSeconds % 60).toString().padStart(2, '0')
+    return "$hours:$minutes:$seconds"
 }
