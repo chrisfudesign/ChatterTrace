@@ -27,6 +27,7 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +38,7 @@ import org.tensorflow.lite.task.core.BaseOptions;
 import org.tensorflow.lite.support.audio.TensorAudio;
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier;
 
+import java.util.Objects;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -81,18 +83,20 @@ public class DataManager {
 
     private boolean shouldRecognizeSpeechForAnchor = true;
 
-    private String currentlyProcessingAudioFile = "/storage/emulated/0/Android/data/com.washington.chattertrace/files/Documents/Bid4Connection/20230604_221440.wav";
+    private String currentlyProcessingAudioFile = "";
+
+    private int numOfSegmentForAudio = 10;
 
     private AudioClassifier classifier;
     private TensorAudio tensorAudio;
 //    private ScheduledThreadPoolExecutor executor;
 
-    private Runnable classifyRunnable = new Runnable() {
-        @Override
-        public void run() {
-            classifyAudio();
-        }
-    };
+//    private Runnable classifyRunnable = new Runnable() {
+//        @Override
+//        public void run() {
+//            classifyAudio();
+//        }
+//    };
 
     private void initClassifier() {
         BaseOptions.Builder baseOptionsBuilder = BaseOptions.builder()
@@ -112,15 +116,32 @@ public class DataManager {
 
     }
 
-    public void classifyAudio() {
-        if (currentlyProcessingAudioFile != "") {
+    public boolean classifyAudio() {
+        if (!Objects.equals(currentlyProcessingAudioFile, "")) {
             float[] processedAudio = decodeWavToFloatArray(currentlyProcessingAudioFile);
-            tensorAudio.load(processedAudio);
+            int segmentedAudioLength = processedAudio.length / numOfSegmentForAudio;
+            float[][] segmentedAudio = new float[numOfSegmentForAudio - 1][segmentedAudioLength];
+            String[] segmentedPrediction = new String[numOfSegmentForAudio];
+
+            for (int i = 0; i < numOfSegmentForAudio - 1; i++) {
+                segmentedAudio[i] = Arrays.copyOfRange(processedAudio, i * segmentedAudioLength, i * segmentedAudioLength + segmentedAudioLength);
+                tensorAudio.load(segmentedAudio[i]);
+                List<Classifications> output = classifier.classify(tensorAudio);
+                segmentedPrediction[i] = output.get(0).getCategories().get(0).getLabel();
+            }
+            float[] segmentedAudioFinalCut = Arrays.copyOfRange(processedAudio, (numOfSegmentForAudio - 1) * segmentedAudioLength, processedAudio.length);
+            tensorAudio.load(segmentedAudioFinalCut);
             List<Classifications> output = classifier.classify(tensorAudio);
-            String result = output.get(0).getCategories().get(0).getLabel();
-            System.out.println("RECOGNITION RESULT");
-            System.out.println(result);
+            segmentedPrediction[segmentedPrediction.length - 1] = output.get(0).getCategories().get(0).getLabel();
+
+            for (int i = 0; i < numOfSegmentForAudio - 1; i++) {
+                if (segmentedPrediction[i] != "Silence") {
+                    // Trigger notification
+                    return true;
+                }
+            }
         }
+        return false;
     }
 
     public static float[] decodeWavToFloatArray(String filePath) {
@@ -191,53 +212,6 @@ public class DataManager {
 
         return null;
     }
-
-//    public static float[] readFloatArrayFromFile(String filePath) {
-//        FileInputStream fileInputStream = null;
-//        BufferedInputStream bufferedInputStream = null;
-//        DataInputStream dataInputStream = null;
-//        float[] floatArray = null;
-//        String TAG = "ReadFile";
-//
-//        try {
-//            fileInputStream = new FileInputStream(filePath);
-//            bufferedInputStream = new BufferedInputStream(fileInputStream);
-//            dataInputStream = new DataInputStream(bufferedInputStream);
-//
-//            int length = dataInputStream.readInt();  // Read the length of the float array
-//
-//            floatArray = new float[length];
-//            for (int i = 0; i < length; i++) {
-//                floatArray[i] = dataInputStream.readFloat();  // Read each float value
-//            }
-//        } catch (IOException e) {
-//            Log.e(TAG, "Error reading float array from file: " + e.getMessage());
-//        } finally {
-//            if (dataInputStream != null) {
-//                try {
-//                    dataInputStream.close();
-//                } catch (IOException e) {
-//                    Log.e(TAG, "Error closing DataInputStream: " + e.getMessage());
-//                }
-//            }
-//            if (bufferedInputStream != null) {
-//                try {
-//                    bufferedInputStream.close();
-//                } catch (IOException e) {
-//                    Log.e(TAG, "Error closing BufferedInputStream: " + e.getMessage());
-//                }
-//            }
-//            if (fileInputStream != null) {
-//                try {
-//                    fileInputStream.close();
-//                } catch (IOException e) {
-//                    Log.e(TAG, "Error closing FileInputStream: " + e.getMessage());
-//                }
-//            }
-//        }
-//
-//        return floatArray;
-//    }
 
     /**
      * When the manager is instantiated for the first time
@@ -587,12 +561,22 @@ public class DataManager {
                 File file = new File(item.path);
                 file.delete();
             }
+
+            currentlyProcessingAudioFile = newitem.path;
+            boolean classificationResult = classifyAudio();
+            if (classificationResult) {
+                NotificationHelper.showNotification(context, "Possible bid for connection?", "It seems that your family member just made a bid for connection, please click this to record a response.");
+                // GET THE LOGIC OF RECORDING 30s+1min CORRECT
+            }
         }
-        currentlyProcessingAudioFile = newitem.path;
         deleteFilesOutOfMaxFiles();
         processUpload(filename, shouldkeep);
     }
 
+//    public void pushNotification() {
+//        NotificationHelper.showNotification(context, "Possible bid for connection?", "It seems that your family member just made a bid for connection, please click this to record a response.");
+//    }
+//
 
     private void processUpload(String filename, boolean shouldkeep) {
         if (autoUpload && shouldkeep) {

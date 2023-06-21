@@ -21,8 +21,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
 import com.washington.chattertrace.DataLogic.DataManager
-import com.washington.chattertrace.data.dummyDataSetup
 import com.washington.chattertrace.RecordingLogic.RecordingManager
+import com.washington.chattertrace.data.dummyDataSetup
 import java.io.IOException
 
 
@@ -33,8 +33,6 @@ class MainActivity : ComponentActivity() {
     var context: Context? = null
     private val REQUEST_ID_MULTIPLE_PERMISSIONS = 1
     private var serviceBound = false
-    private val preceding_time = 0 // PAY ATTENTION TO THIS
-    private val preceding_mode = false // PAY ATTENTION TO THIS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +63,14 @@ class MainActivity : ComponentActivity() {
 //            MainScreen(recordingManager = recordingManager, dataManager = dataManager)
 //        }
     }
+
+//    override fun onNewIntent(intent: Intent?) {
+//        super.onNewIntent(intent)
+//        val message = intent?.getStringExtra("message")
+//        if (message != null) {
+//            // Handle the received message here
+//        }
+//    }
 
     private fun checkAndRequestPermissions(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -98,12 +104,10 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun StartService() {
-        println("TRY TO START SERVICE")
         val recorderIntent = Intent(this, RecordingManager::class.java)
         startService(recorderIntent)
         bindService(recorderIntent, serviceConnection, BIND_IMPORTANT)
 //        bindService(recorderIntent, serviceConnection, BIND_AUTO_CREATE)
-        println("AAAAAAAAAAAAAAAAAAAAAAA")
     }
 
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
@@ -116,15 +120,14 @@ class MainActivity : ComponentActivity() {
             println(recordingManager?.isRecording())
             //for auto-recording
 //            updateRecordSettings()
-//            recordingManager?.setPrecedingTime(10)
 
-            if (preceding_time > 0 && preceding_mode) {
-                recordingManager?.StartRecordingSilently(
-                    dataManager?.getRecordingNameOfTimeWithPrefix(
-                        "preceding"
-                    ), preceding_time
-                )
-            }
+//            if (preceding_time > 0 && preceding_mode) {
+//                recordingManager?.StartRecordingSilently(
+//                    dataManager?.getRecordingNameOfTimeWithPrefix(
+//                        "preceding"
+//                    ), preceding_time
+//                )
+//            }
             setContent {
                 // create data maps
                 dummyDataSetup()
@@ -135,6 +138,7 @@ class MainActivity : ComponentActivity() {
         override fun onServiceDisconnected(name: ComponentName) {
             serviceBound = false
         }
+
     }
 
 }
