@@ -41,7 +41,7 @@ public class NotificationHelper {
         extras.putString("message", "RECORD NOW");
         builder.setExtras(extras);
 
-        Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = new Intent(context, MainActivity.class); // TODO: create a new activity for questionnaire
         intent.putExtras(extras);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);

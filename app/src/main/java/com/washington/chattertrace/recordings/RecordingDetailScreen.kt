@@ -1,5 +1,11 @@
 package com.washington.chattertrace.recordings
 
+import android.net.Uri
+import android.os.Environment
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.ui.PlayerView
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,16 +14,20 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.exoplayer2.upstream.DataSpec
+import com.google.android.exoplayer2.upstream.FileDataSource
+import com.google.android.exoplayer2.util.MimeTypes
 import com.washington.chattertrace.R
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,7 +85,10 @@ fun RecordingList() {
             .verticalScroll(rememberScrollState())
     ) {
         Column {
-            RecordingRow()
+            var filePath = Environment.getExternalStorageDirectory().absolutePath +
+                    "/Android/data/com.washington.chattertrace/files/Documents/Bid4Connection/1_0.mp3"
+            var audio = File(filePath)
+            RecordingRow(audio)
         }
     }
 }
@@ -83,12 +96,32 @@ fun RecordingList() {
 
 @ExperimentalMaterial3Api
 @Composable
-fun RecordingRow() {
+fun RecordingRow(audio: File) {
+
+
     // State to track the current position of the audio recording
     var currentPosition by rememberSaveable { mutableStateOf(0L) }
 
     // State to track whether the recording is currently playing
     var isPlaying by rememberSaveable { mutableStateOf(false) }
+
+    val context = LocalContext.current
+
+    val exoPlayer = remember {
+        ExoPlayer.Builder(context).build().apply {
+            val fileDataSourceFactory = FileDataSource.Factory()
+            val dataSpec = DataSpec(Uri.fromFile(audio))
+            val mediaItem = MediaItem.Builder()
+                .setUri(dataSpec.uri)
+                .setMediaId(audio.name)
+                .setMimeType(MimeTypes.AUDIO_MPEG)
+                .build()
+
+            setMediaItem(mediaItem)
+
+            prepare()
+        }
+    }
 
     ListItem(
         modifier = Modifier
@@ -119,7 +152,18 @@ fun RecordingRow() {
         supportingText = {},
         leadingContent = {
             IconButton(
-                onClick = { isPlaying = !isPlaying/* Handle play/pause logic here */ },
+                onClick = {
+                    if (exoPlayer.isPlaying) {
+                        // pause the video
+                        exoPlayer.pause()
+                        isPlaying = false
+                    } else {
+                        // play the video
+                        // it's already paused
+                        exoPlayer.play()
+                        isPlaying = true
+                    }
+                },
                 modifier = Modifier.size(48.dp)
             ) {
                 Icon(
@@ -152,41 +196,4 @@ fun RecordingRow() {
             )
         }
     )
-}
-
-@Composable
-fun AudioRecorderBar() {
-    // State to track the current position of the audio recording
-    val currentPosition = remember { mutableStateOf(0f) }
-
-    // State to track whether the recording is currently playing
-    val isPlaying = remember { mutableStateOf(false) }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(
-            onClick = { /* Handle play/pause logic here */ },
-            modifier = Modifier.size(48.dp)
-        ) {
-
-        }
-
-        Slider(
-            value = currentPosition.value,
-            onValueChange = { /* Handle slider value change here */ },
-            valueRange = 0f..100f,
-            colors = SliderDefaults.colors(
-                thumbColor = Color.Green, // Customize thumb color
-                activeTrackColor = Color.Green, // Customize active track color
-                inactiveTrackColor = Color.LightGray // Customize inactive track color
-            ),
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 16.dp)
-        )
-    }
 }
