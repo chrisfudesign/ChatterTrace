@@ -2,10 +2,6 @@ package com.washington.chattertrace.recordings
 
 import android.net.Uri
 import android.os.Environment
-import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.ui.PlayerView
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,11 +19,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.upstream.DataSpec
 import com.google.android.exoplayer2.upstream.FileDataSource
 import com.google.android.exoplayer2.util.MimeTypes
 import com.washington.chattertrace.R
 import java.io.File
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -122,6 +120,24 @@ fun RecordingRow(audio: File) {
             prepare()
         }
     }
+
+    exoPlayer.addListener(object : Player.Listener {
+        override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+            when (playbackState) {
+                ExoPlayer.STATE_BUFFERING -> {}
+                ExoPlayer.STATE_ENDED -> {
+                    exoPlayer.pause()
+                    exoPlayer.seekTo(0)
+                    isPlaying = false}
+                ExoPlayer.STATE_IDLE -> {}
+                ExoPlayer.STATE_READY -> {}
+                else -> {}
+            }
+        }
+
+        fun onPlayWhenReadyCommitted() {}
+        fun onPlayerError(error: ExoPlaybackException?) {}
+    })
 
     ListItem(
         modifier = Modifier
