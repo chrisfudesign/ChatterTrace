@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.washington.chattertrace.data.RecordingFolder
-import com.washington.chattertrace.data.folderList
+import com.washington.chattertrace.data.recordingMap
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,9 +67,33 @@ fun FolderList(navController: NavHostController) {
             .verticalScroll(rememberScrollState())
     ) {
         Column {
-            val folders = folderList
-            folders.forEach { folder ->
-                FolderRow(folder, false, navController)
+
+            var folders = mutableListOf<RecordingFolder>()
+
+            for (date in recordingMap.keys) {
+                recordingMap[date]?.let { RecordingFolder(it, date, false) }?.let {
+                    folders.add(
+                        it
+                    )
+                }
+            }
+
+            if (folders.isEmpty()) {
+                Text(
+                    text = "No reflections available",
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp,
+                    color = Color.Gray,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxSize()
+                        .align(Alignment.CenterHorizontally),
+                    textAlign = TextAlign.Center
+                )
+            } else {
+                folders.forEach { folder ->
+                    FolderRow(folder, false, navController)
+                }
             }
         }
     }

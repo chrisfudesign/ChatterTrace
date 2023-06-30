@@ -23,8 +23,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.washington.chattertrace.R
 import com.washington.chattertrace.data.RecordingFolder
-import com.washington.chattertrace.data.folderList
+import com.washington.chattertrace.data.recordingMap
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,9 +69,32 @@ fun FolderList(navController: NavHostController) {
             .verticalScroll(rememberScrollState())
     ) {
         Column {
-            val folders = folderList;
-            folders.forEach { folder ->
-                FolderRow(folder,  navController)
+            var folders = mutableListOf<RecordingFolder>()
+
+            for (date in recordingMap.keys) {
+                recordingMap[date]?.let { RecordingFolder(it, date, false) }?.let {
+                    folders.add(
+                        it
+                    )
+                }
+            }
+
+            if (folders.isEmpty()) {
+                Text(
+                    text = "No recordings available",
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp,
+                    color = Color.Gray,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxSize()
+                        .align(Alignment.CenterHorizontally),
+                    textAlign = TextAlign.Center
+                )
+            } else {
+                folders.forEach { folder ->
+                    FolderRow(folder,  navController)
+                }
             }
         }
     }
@@ -90,8 +114,9 @@ fun FolderRow(folder: RecordingFolder, navController: NavHostController) {
             )
             .clickable {
                 // TODO: figure out how to pass in the folder item or find infrastructure to do so
-                var date = "${folder.date.monthValue}-${folder.date.dayOfMonth}"
-                navController.navigate("recordingDetail/${date}") {
+                val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+                val dateString = folder.date.format(formatter)
+                navController.navigate("recordingDetail/${dateString}") {
                     // Pop up to the start destination of the graph to
                     // avoid building up a large stack of destinations
                     // on the back stack as users select items
@@ -111,8 +136,7 @@ fun FolderRow(folder: RecordingFolder, navController: NavHostController) {
             Text(text = "Bid - ${day}")
                        },
         supportingText = {
-            Text(text = "${String.format("%02d", folder.duration.minute)}:${String.format("%02d", folder.duration.second)}")
-            Text(text = "0/${folder.numRecordings}") },
+            Text(text = "0/${folder.recordings.size}") },
         leadingContent = {
             Icon(
                 painter = painterResource(id = R.drawable.ic_outline_folder_24),

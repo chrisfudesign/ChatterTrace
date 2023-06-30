@@ -24,12 +24,19 @@ import com.google.android.exoplayer2.upstream.DataSpec
 import com.google.android.exoplayer2.upstream.FileDataSource
 import com.google.android.exoplayer2.util.MimeTypes
 import com.washington.chattertrace.R
+import com.washington.chattertrace.data.recordingMap
+import kotlinx.coroutines.delay
 import java.io.File
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import kotlin.time.Duration.Companion.seconds
 
+var DIR_PATH = Environment.getExternalStorageDirectory().absolutePath +
+        "/Android/data/com.washington.chattertrace/files/Documents/Bid4Connection/"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecordingDetailScreen(date: String) {
+fun RecordingDetailScreen(dateString: String) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -38,9 +45,10 @@ fun RecordingDetailScreen(date: String) {
         CenterAlignedTopAppBar(
             // header text
             title = {
-                var displayDate = date.replace("-", "/")
+
+
                 Text(
-                    text = "$displayDate Recordings",
+                    text = "${formatDateString(dateString)} Recordings",
                     fontWeight = FontWeight.Normal,
                     fontSize = 24.sp,
                     color = Color.Black,
@@ -66,7 +74,7 @@ fun RecordingDetailScreen(date: String) {
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(Color.White)
         )
 
-        RecordingList()
+        RecordingList(dateString)
     }
 }
 
@@ -76,17 +84,21 @@ fun RecordingDetailScreen(date: String) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecordingList() {
+fun RecordingList(dateString: String) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
         Column {
-            var filePath = Environment.getExternalStorageDirectory().absolutePath +
-                    "/Android/data/com.washington.chattertrace/files/Documents/Bid4Connection/1_0.mp3"
-            var audio = File(filePath)
-            RecordingRow(audio)
+            val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+            val localDate = LocalDate.parse(dateString, formatter)
+
+
+            recordingMap[localDate]?.forEach { recording ->
+                var filePath = DIR_PATH + recording.audio.name
+                RecordingRow(recording.audio, recording.isUploaded)
+            }
         }
     }
 }
@@ -94,7 +106,7 @@ fun RecordingList() {
 
 @ExperimentalMaterial3Api
 @Composable
-fun RecordingRow(audio: File) {
+fun RecordingRow(audio: File, isUploaded: Boolean) {
 
 
     // State to track the current position of the audio recording
@@ -121,23 +133,38 @@ fun RecordingRow(audio: File) {
         }
     }
 
+    val duration = exoPlayer.duration.coerceAtLeast(0L)
+
     exoPlayer.addListener(object : Player.Listener {
         override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
             when (playbackState) {
                 ExoPlayer.STATE_BUFFERING -> {}
                 ExoPlayer.STATE_ENDED -> {
+                    /// reset player
                     exoPlayer.pause()
                     exoPlayer.seekTo(0)
-                    isPlaying = false}
+                    isPlaying = false
+                    currentPosition = 0L
+                }
                 ExoPlayer.STATE_IDLE -> {}
                 ExoPlayer.STATE_READY -> {}
                 else -> {}
             }
+
         }
 
         fun onPlayWhenReadyCommitted() {}
         fun onPlayerError(error: ExoPlaybackException?) {}
     })
+
+    if (isPlaying) {
+        LaunchedEffect(Unit) {
+            while(true) {
+                currentPosition = exoPlayer.currentPosition
+                delay(1.seconds / 30)
+            }
+        }
+    }
 
     ListItem(
         modifier = Modifier
@@ -149,35 +176,37 @@ fun RecordingRow(audio: File) {
                 shape = RoundedCornerShape(6.dp)
             ),
         headlineText = {
-            // figure out to display Today or MM/DD
-            Text(text = "Bid Name")
-
+            Text(
+                text = "Bid Name",
+                fontSize = 16.sp,
+            )
+        },
+        supportingText = {
             Slider(
                 value = currentPosition.toFloat(),
-                onValueChange = { /* Handle slider value change here */ },
-                valueRange = 0f..100f,
+                onValueChange = { newTime: Float ->
+                    exoPlayer.seekTo(newTime.toLong())
+                    currentPosition = newTime.toLong() },
+                valueRange = 0f..duration.toFloat(),
                 colors = SliderDefaults.colors(
                     thumbColor = colorResource(id = R.color.primary), // Customize thumb color
                     activeTrackColor = colorResource(id = R.color.primary), // Customize active track color
                     inactiveTrackColor = Color.LightGray // Customize inactive track color
-                ),
-//                modifier = Modifier
-//                    .padding(horizontal = 16.dp)
+                )
             )
         },
-        supportingText = {},
         leadingContent = {
             IconButton(
                 onClick = {
-                    if (exoPlayer.isPlaying) {
+                    isPlaying = if (exoPlayer.isPlaying) {
                         // pause the video
                         exoPlayer.pause()
-                        isPlaying = false
+                        false
                     } else {
                         // play the video
                         // it's already paused
                         exoPlayer.play()
-                        isPlaying = true
+                        true
                     }
                 },
                 modifier = Modifier.size(48.dp)
@@ -190,20 +219,20 @@ fun RecordingRow(audio: File) {
             }
         },
         trailingContent = {
-//            if (folder.isUploaded) {
-//                Icon(
-//                    painter = painterResource(id = R.drawable.ic_uploaded_checkmark),
-//                    contentDescription = "Localized description",
-//                    tint = Color.Unspecified
-//                )
-//            } else {
+            if (isUploaded) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_uploaded_checkmark),
+                    contentDescription = "Localized description",
+                    tint = Color.Unspecified
+                )
+            } else {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_upload),
                     contentDescription = "Localized description",
                     tint = Color.Unspecified,
                     modifier = Modifier.padding(start = 16.dp)
                 )
-//            }
+            }
 
             Icon(
                 painter = painterResource(id = R.drawable.ic_arrow_drop_down_24),
@@ -212,4 +241,18 @@ fun RecordingRow(audio: File) {
             )
         }
     )
+}
+
+fun formatDateString(dateString: String): String {
+    var formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+    val date = LocalDate.parse(dateString, formatter)
+
+    formatter = DateTimeFormatter.ofPattern("MM/dd")
+    val formattedDate = date.format(formatter)
+
+    val parts = formattedDate.split("/")
+    val month = parts[0].removePrefix("0")
+    val day = parts[1].removePrefix("0")
+
+    return "$month/$day"
 }
