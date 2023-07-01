@@ -103,7 +103,7 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
 
         // time select radio buttons
         val radioOptions = listOf(15, 30, 60, 90, 120)
-        var selectedOptionIndex by remember { mutableStateOf(0) }
+        var selectedOptionIndex by rememberSaveable { mutableStateOf(0) }
 
         Row(
             Modifier
@@ -111,11 +111,11 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
                 .padding(top = 30.dp, start = 9.dp, end = 9.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            radioOptions.forEach { text ->
+            radioOptions.forEachIndexed { index, text ->
                 OutlinedButton(
-                    onClick = { /* Handle button click */ },
+                    onClick = { selectedOptionIndex = index },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.White,
+                        containerColor = if (index == selectedOptionIndex) colorResource(id = R.color.light_surface) else Color.White,
                         contentColor = colorResource(id = R.color.primary),
                     ),
                     shape = RoundedCornerShape(100.dp),
