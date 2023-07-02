@@ -4,19 +4,31 @@ import android.net.Uri
 import android.os.Environment
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.PaintingStyle
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.android.exoplayer2.*
@@ -45,8 +57,6 @@ fun RecordingDetailScreen(dateString: String) {
         CenterAlignedTopAppBar(
             // header text
             title = {
-
-
                 Text(
                     text = "${formatDateString(dateString)} Recordings",
                     fontWeight = FontWeight.Normal,
@@ -75,6 +85,7 @@ fun RecordingDetailScreen(dateString: String) {
         )
 
         RecordingList(dateString)
+
     }
 }
 
@@ -99,6 +110,7 @@ fun RecordingList(dateString: String) {
                 var filePath = DIR_PATH + recording.audio.name
                 RecordingRow(recording.audio, recording.isUploaded)
             }
+            Questionnaire()
         }
     }
 }
@@ -107,8 +119,6 @@ fun RecordingList(dateString: String) {
 @ExperimentalMaterial3Api
 @Composable
 fun RecordingRow(audio: File, isUploaded: Boolean) {
-
-
     // State to track the current position of the audio recording
     var currentPosition by rememberSaveable { mutableStateOf(0L) }
 
@@ -192,7 +202,8 @@ fun RecordingRow(audio: File, isUploaded: Boolean) {
                     thumbColor = colorResource(id = R.color.primary), // Customize thumb color
                     activeTrackColor = colorResource(id = R.color.primary), // Customize active track color
                     inactiveTrackColor = Color.LightGray // Customize inactive track color
-                )
+                ),
+                modifier = Modifier.height(24.dp)
             )
         },
         leadingContent = {
@@ -241,6 +252,178 @@ fun RecordingRow(audio: File, isUploaded: Boolean) {
             )
         }
     )
+}
+
+// TODO: turn this function into an activity instead
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Questionnaire() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(14.dp, 6.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(colorResource(id = R.color.light_surface))
+
+        ) {
+            var isChecked by rememberSaveable { mutableStateOf(false) }
+            var sliderValue by rememberSaveable { mutableStateOf(3f) }
+            var textValue by rememberSaveable { mutableStateOf("") }
+
+            Text(
+                text = "After playing the recording, if you are comfortable sharing, tell us what happened and how you feel about it.",
+                fontWeight = FontWeight.Normal,
+                fontSize = 14.sp,
+                color = colorResource(id = R.color.light_text),
+                modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 8.dp,)
+            )
+
+            Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+
+            // first question
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "1. Did you respond to someone?",
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp,
+                    color = Color.Black,
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
+
+                Checkbox(
+                    checked = isChecked,
+                    onCheckedChange = { isChecked = it }
+                )
+            }
+
+            Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+
+            // second question
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 8.dp),
+            ) {
+                Text(
+                    text = "2. How important was it that you respond?",
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp,
+                    color = Color.Black
+                )
+
+                Slider(
+                    value = sliderValue,
+                    onValueChange = { sliderValue = it },
+                    valueRange = 1f..5f,
+                    modifier = Modifier
+                        .height(48.dp)
+                        .padding(horizontal = 28.dp)
+                )
+            }
+
+            Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+
+            // third question
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 8.dp),
+            ) {
+                Text(
+                    text = "3. How do you feel about your response to others?",
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp,
+                    color = Color.Black
+                )
+            }
+
+            Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+
+            // fourth question
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 8.dp),
+            ) {
+                Text(
+                    text = "4. What did you notice and feel about the way you responded to other people?",
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp,
+                    color = Color.Black
+                )
+
+                OutlinedTextField(
+                    value = textValue,
+                    onValueChange = { textValue = it },
+                    placeholder = { Text("Input Here")},
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .fillMaxSize(),
+                    trailingIcon = {
+                        Icon(
+                            painterResource(id = R.drawable.ic_cancel_24),
+                            contentDescription = "Localized description",
+                            modifier = Modifier.clickable { textValue = ""}
+                        )
+                    }
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 8.dp)
+                ) {
+                    OutlinedButton(
+                        onClick = { /* Handle button click */ },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = (colorResource(id = R.color.light_surface)),
+                            contentColor = colorResource(id = R.color.primary)
+                        ),
+                        border = BorderStroke(1.dp, colorResource(id = R.color.outline)),
+                        shape = RoundedCornerShape(100.dp),
+                        modifier = Modifier.padding(end = 8.dp)
+                    ) {
+                        Text("Delete")
+                    }
+
+                    OutlinedButton(
+                        onClick = { /* Handle button click */ },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = (colorResource(id = R.color.light_surface)),
+                            contentColor = colorResource(id = R.color.primary)
+                        ),
+                        border = BorderStroke(1.dp, colorResource(id = R.color.outline)),
+                        shape = RoundedCornerShape(100.dp),
+                        modifier = Modifier.padding(end = 8.dp)
+                    ) {
+                        Text("Save for later")
+                    }
+
+                    Button(
+                        onClick = { /* Handle button click */ },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colorResource(id = R.color.primary),
+                            contentColor = Color.White,
+
+                            ),
+                        shape = RoundedCornerShape(100.dp),
+                    ) {
+                        Text("Save")
+                    }
+                }
+
+            }
+        }
+    }
+
 }
 
 fun formatDateString(dateString: String): String {
