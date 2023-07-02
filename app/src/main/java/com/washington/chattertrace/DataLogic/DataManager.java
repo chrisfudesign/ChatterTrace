@@ -119,23 +119,23 @@ public class DataManager {
     public boolean classifyAudio() {
         if (!Objects.equals(currentlyProcessingAudioFile, "")) {
             float[] processedAudio = decodeWavToFloatArray(currentlyProcessingAudioFile);
+            assert processedAudio != null;
+            if (processedAudio.length < numOfSegmentForAudio) {
+                return false;
+            }
             int segmentedAudioLength = processedAudio.length / numOfSegmentForAudio;
-            float[][] segmentedAudio = new float[numOfSegmentForAudio - 1][segmentedAudioLength];
+            float[][] segmentedAudio = new float[numOfSegmentForAudio][segmentedAudioLength];
             String[] segmentedPrediction = new String[numOfSegmentForAudio];
 
-            for (int i = 0; i < numOfSegmentForAudio - 1; i++) {
+            for (int i = 0; i < numOfSegmentForAudio; i++) {
                 segmentedAudio[i] = Arrays.copyOfRange(processedAudio, i * segmentedAudioLength, i * segmentedAudioLength + segmentedAudioLength);
                 tensorAudio.load(segmentedAudio[i]);
                 List<Classifications> output = classifier.classify(tensorAudio);
                 segmentedPrediction[i] = output.get(0).getCategories().get(0).getLabel();
             }
-            float[] segmentedAudioFinalCut = Arrays.copyOfRange(processedAudio, (numOfSegmentForAudio - 1) * segmentedAudioLength, processedAudio.length);
-            tensorAudio.load(segmentedAudioFinalCut);
-            List<Classifications> output = classifier.classify(tensorAudio);
-            segmentedPrediction[segmentedPrediction.length - 1] = output.get(0).getCategories().get(0).getLabel();
 
             for (int i = 0; i < numOfSegmentForAudio - 1; i++) {
-                if (segmentedPrediction[i] != "Silence") {
+                if (segmentedPrediction[i] == "Speech") {
                     // Trigger notification
                     return true;
                 }
@@ -550,6 +550,7 @@ public class DataManager {
             mFolderFileList.add(0, newitem);
             new insertAsyncTask(recordItemDAO).execute(newitem);
         } else {
+
             // if should_keep is false, then it is temporary background clips for preceding files
             // we store them in the shouldnotkeepbuffer, and when the buffer is full, we delete the first file
             mShouldNotKeepBuffer.add(newitem);
@@ -561,12 +562,14 @@ public class DataManager {
                 File file = new File(item.path);
                 file.delete();
             }
-
             currentlyProcessingAudioFile = newitem.path;
             boolean classificationResult = classifyAudio();
-            if (classificationResult) {
-                NotificationHelper.showNotification(context, "Possible bid for connection?", "It seems that your family member just made a bid for connection, please click this to record a response.");
+            if (true) {
+
+                NotificationHelper.showNotification(context, "", "It seems that your family member just made a bid for connection, please click this to record a response.");
                 // GET THE LOGIC OF RECORDING 30s+1min CORRECT
+                // Learn how to implement broadcast
+
             }
         }
         deleteFilesOutOfMaxFiles();
