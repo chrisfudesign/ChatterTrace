@@ -9,6 +9,9 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -149,6 +152,13 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
     val navController = rememberNavController()
     Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { /* Handle FAB click */ }
+            ) {
+                Icon(Icons.Filled.Add, contentDescription = "Add")
+            }
+        },
         bottomBar = { BottomNavigationBar(navController) },
         content = { padding -> // We have to pass the scaffold inner padding to our content. That's why we use Box.
             Box(modifier = Modifier.padding(padding)) {
