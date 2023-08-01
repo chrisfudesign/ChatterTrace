@@ -1,6 +1,7 @@
 package com.washington.chattertrace
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -9,6 +10,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -39,12 +44,17 @@ import androidx.navigation.compose.rememberNavController
 import com.washington.chattertrace.DataLogic.DataManager
 import com.washington.chattertrace.RecordingLogic.RecordingManager
 import com.washington.chattertrace.data.dummyDataSetup
+import com.washington.chattertrace.service.SuspendwindowService
+import com.washington.chattertrace.utils.ItemViewTouchListener
+import com.washington.chattertrace.utils.Utils
+import com.washington.chattertrace.utils.ViewModleMain
 import java.io.IOException
 import kotlin.math.roundToInt
 
 
 class MainActivity : ComponentActivity() {
-
+    private var floatRootView: View? = null//悬浮窗View
+    private var isReceptionShow = false
     private var recordingManager: RecordingManager? = null
     private var dataManager: DataManager? = null
     var context: Context? = null
@@ -73,7 +83,11 @@ class MainActivity : ComponentActivity() {
             println("NO PERMISSION")
         }
 
-
+        startService(Intent(this, SuspendwindowService::class.java))
+        Utils.checkSuspendedWindowPermission(this) {
+            isReceptionShow = true
+            ViewModleMain.isShowSuspendWindow.postValue(true)
+        }
 //        setContent {
 //            // create data maps
 //            dummyDataSetup()
@@ -157,7 +171,25 @@ class MainActivity : ComponentActivity() {
         }
 
     }
-
+    /**
+     * 应用界面内显示悬浮球
+     */
+    @SuppressLint("ClickableViewAccessibility")
+    private fun showCurrentWindow() {
+        var layoutParam = WindowManager.LayoutParams().apply {
+            //设置大小 自适应
+            width = ViewGroup.LayoutParams.WRAP_CONTENT
+            height = ViewGroup.LayoutParams.WRAP_CONTENT
+            flags =
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+        }
+        // 新建悬浮窗控件
+        floatRootView = LayoutInflater.from(this).inflate(R.layout.activity_float_item, null)
+        //设置拖动事件
+        floatRootView?.setOnTouchListener(ItemViewTouchListener(layoutParam, windowManager))
+        // 将悬浮窗控件添加到WindowManager
+        windowManager.addView(floatRootView, layoutParam)
+    }
 }
 
 
