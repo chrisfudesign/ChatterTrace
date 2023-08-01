@@ -14,12 +14,25 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.IntOffset
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
@@ -27,6 +40,7 @@ import com.washington.chattertrace.DataLogic.DataManager
 import com.washington.chattertrace.RecordingLogic.RecordingManager
 import com.washington.chattertrace.data.dummyDataSetup
 import java.io.IOException
+import kotlin.math.roundToInt
 
 
 class MainActivity : ComponentActivity() {
@@ -151,10 +165,25 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
     val navController = rememberNavController()
+
+    // Remember the current position of the FAB
+    val offsetX = remember { mutableStateOf(0f) }
+    val offsetY = remember { mutableStateOf(0f) }
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* Handle FAB click */ }
+                onClick = { /* Handle FAB click */ },
+                modifier = Modifier
+                    .offset { IntOffset(offsetX.value.roundToInt(), offsetY.value.roundToInt()) }
+                    .pointerInput(Unit) {
+                        detectDragGestures { change, dragAmount ->
+                            change.consume()
+                            offsetX.value = offsetX.value + dragAmount.x
+                            offsetY.value = offsetY.value + dragAmount.y
+                        }
+                    }
+            
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Add")
             }
