@@ -58,4 +58,6 @@
     <string name="settings_indicator_event_desc">Set the recording event when you want to get notified.</string>
     <string name="settings_indicator_style">Record Indicator Style</string>
     <string name="settings_indicator_style_desc">Set the notification style when the event happens</string>
+
+    <string name="bubble_description">Floating Bubble</string>
 </resources>
