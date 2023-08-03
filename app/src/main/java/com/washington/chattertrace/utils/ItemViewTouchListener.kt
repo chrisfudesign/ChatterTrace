@@ -4,12 +4,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 
-/**
- * @功能:处理悬浮窗拖动更新位置
- * @User Lmy
- * @Creat 4/16/21 9:41 AM
- * @Compony 永远相信美好的事情即将发生
- */
 class ItemViewTouchListener(val wl: WindowManager.LayoutParams, val windowManager: WindowManager) :
     View.OnTouchListener {
     private var x = 0
@@ -32,7 +26,6 @@ class ItemViewTouchListener(val wl: WindowManager.LayoutParams, val windowManage
                     x += movedX
                     y += movedY
                 }
-                //更新悬浮球控件位置
                 windowManager?.updateViewLayout(view, wl)
             }
             else -> {

@@ -74,19 +74,20 @@ class MainActivity : ComponentActivity() {
             println("NO PERMISSION")
         }
 
-        startService(Intent(this, SuspendwindowService::class.java))
-        Utils.checkSuspendedWindowPermission(this) {
-            isReceptionShow = true
-            ViewModleMain.isShowSuspendWindow.postValue(true)
-        }
-        val imageView = findViewById<ImageView>(com.washington.chattertrace.R.id.bubble_close)
-
-
 //        setContent {
 //            // create data maps
 //            dummyDataSetup()
 //            MainScreen(recordingManager = recordingManager, dataManager = dataManager)
 //        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        startService(Intent(this, SuspendwindowService::class.java))
+        Utils.checkSuspendedWindowPermission(this) {
+            isReceptionShow = true
+            ViewModleMain.isShowSuspendWindow.postValue(true)
+        }
     }
 
 //    override fun onNewIntent(intent: Intent?) {
