@@ -1,7 +1,7 @@
 package com.washington.chattertrace
 
 import android.Manifest
-import android.annotation.SuppressLint
+import android.R
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -10,31 +10,23 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.widget.ImageView
+import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.rememberDraggableState
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntOffset
@@ -45,7 +37,6 @@ import com.washington.chattertrace.DataLogic.DataManager
 import com.washington.chattertrace.RecordingLogic.RecordingManager
 import com.washington.chattertrace.data.dummyDataSetup
 import com.washington.chattertrace.service.SuspendwindowService
-import com.washington.chattertrace.utils.ItemViewTouchListener
 import com.washington.chattertrace.utils.Utils
 import com.washington.chattertrace.utils.ViewModleMain
 import java.io.IOException
@@ -88,6 +79,9 @@ class MainActivity : ComponentActivity() {
             isReceptionShow = true
             ViewModleMain.isShowSuspendWindow.postValue(true)
         }
+        val imageView = findViewById<ImageView>(com.washington.chattertrace.R.id.bubble_close)
+
+
 //        setContent {
 //            // create data maps
 //            dummyDataSetup()
@@ -171,25 +165,6 @@ class MainActivity : ComponentActivity() {
         }
 
     }
-    /**
-     * 应用界面内显示悬浮球
-     */
-    @SuppressLint("ClickableViewAccessibility")
-    private fun showCurrentWindow() {
-        var layoutParam = WindowManager.LayoutParams().apply {
-            //设置大小 自适应
-            width = ViewGroup.LayoutParams.WRAP_CONTENT
-            height = ViewGroup.LayoutParams.WRAP_CONTENT
-            flags =
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-        }
-        // 新建悬浮窗控件
-        floatRootView = LayoutInflater.from(this).inflate(R.layout.activity_float_item, null)
-        //设置拖动事件
-        floatRootView?.setOnTouchListener(ItemViewTouchListener(layoutParam, windowManager))
-        // 将悬浮窗控件添加到WindowManager
-        windowManager.addView(floatRootView, layoutParam)
-    }
 }
 
 
@@ -198,28 +173,7 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
     val navController = rememberNavController()
 
-    // Remember the current position of the FAB
-    val offsetX = remember { mutableStateOf(0f) }
-    val offsetY = remember { mutableStateOf(0f) }
-
     Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { /* Handle FAB click */ },
-                modifier = Modifier
-                    .offset { IntOffset(offsetX.value.roundToInt(), offsetY.value.roundToInt()) }
-                    .pointerInput(Unit) {
-                        detectDragGestures { change, dragAmount ->
-                            change.consume()
-                            offsetX.value = offsetX.value + dragAmount.x
-                            offsetY.value = offsetY.value + dragAmount.y
-                        }
-                    }
-            
-            ) {
-                Icon(Icons.Filled.Add, contentDescription = "Add")
-            }
-        },
         bottomBar = { BottomNavigationBar(navController) },
         content = { padding -> // We have to pass the scaffold inner padding to our content. That's why we use Box.
             Box(modifier = Modifier.padding(padding)) {
