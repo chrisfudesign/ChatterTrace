@@ -77,7 +77,17 @@ class SuspendwindowService : LifecycleService() {
 
         floatRootView = LayoutInflater.from(this).inflate(R.layout.activity_float_item, null)
         bubbleClose = floatRootView?.findViewById(R.id.bubble_close)
-        bubbleClose?.setBackgroundColor(123)
+        bubbleClose?.setOnClickListener(View.OnClickListener {
+            if (!Utils.isNull(floatRootView)) {
+                if (!Utils.isNull(floatRootView?.windowToken)) {
+                    if (!Utils.isNull(windowManager)) {
+                        windowManager?.removeView(floatRootView)
+                    }
+                }
+            }
+            ViewModleMain.isShowSuspendWindow.postValue(false)
+            ViewModleMain.isShowWindow.postValue(false)
+        })
         floatRootView?.setOnTouchListener(ItemViewTouchListener(layoutParam, windowManager))
         windowManager.addView(floatRootView, layoutParam)
     }
