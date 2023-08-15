@@ -1,7 +1,5 @@
 package com.washington.chattertrace.DataLogic;
 
-import static com.google.android.exoplayer2.offline.DownloadService.startService;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;

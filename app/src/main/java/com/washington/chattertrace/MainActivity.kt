@@ -44,7 +44,7 @@ import kotlin.math.roundToInt
 
 
 class MainActivity : ComponentActivity() {
-    private var floatRootView: View? = null//悬浮窗View
+    private var floatRootView: View? = null//floating window View
     private var isReceptionShow = false
     private var recordingManager: RecordingManager? = null
     private var dataManager: DataManager? = null
@@ -74,6 +74,14 @@ class MainActivity : ComponentActivity() {
             println("NO PERMISSION")
         }
 
+        if(!Utils.isServiceRunning(this, "SuspendwindowService")){
+            startService(Intent(this, SuspendwindowService::class.java))
+            Utils.checkSuspendedWindowPermission(this) {
+                isReceptionShow = true
+                ViewModleMain.isShowSuspendWindow.postValue(true)
+            }
+        }
+
 //        setContent {
 //            // create data maps
 //            dummyDataSetup()
@@ -83,9 +91,14 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        startService(Intent(this, SuspendwindowService::class.java))
-        Utils.checkSuspendedWindowPermission(this) {
-            isReceptionShow = true
+        if (!Utils.isNull(floatRootView)) {
+            if (!Utils.isNull(floatRootView?.windowToken)) {
+                if (Utils.isNull(windowManager)) {
+                    windowManager?.removeView(floatRootView)
+                }
+            }
+        }
+        if(ViewModleMain.isShowSuspendWindow.value == false){
             ViewModleMain.isShowSuspendWindow.postValue(true)
         }
     }
