@@ -8,6 +8,7 @@ object ViewModleMain : ViewModel() {
     @JvmField
     var isShowWindow = MutableLiveData<Boolean>()
 
+    @JvmField
     var isShowSuspendWindow = MutableLiveData<Boolean>()
 
     var isVisible = MutableLiveData<Boolean>()

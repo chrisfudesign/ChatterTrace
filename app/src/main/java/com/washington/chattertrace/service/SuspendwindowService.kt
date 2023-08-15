@@ -17,6 +17,7 @@ import com.washington.chattertrace.utils.ViewModleMain
 class SuspendwindowService : LifecycleService() {
     private lateinit var windowManager: WindowManager
     private var floatRootView: View? = null
+    private var bubbleButton: ImageView? = null
     private var bubbleClose: ImageView? = null
 
     override fun onCreate() {
@@ -76,15 +77,14 @@ class SuspendwindowService : LifecycleService() {
         }
 
         floatRootView = LayoutInflater.from(this).inflate(R.layout.activity_float_item, null)
+        bubbleButton = floatRootView?.findViewById(R.id.bubble_button)
+        bubbleButton?.setOnClickListener(View.OnClickListener {
+            ViewModleMain.isShowSuspendWindow.postValue(false)
+            ViewModleMain.isShowWindow.postValue(false)
+        })
+
         bubbleClose = floatRootView?.findViewById(R.id.bubble_close)
         bubbleClose?.setOnClickListener(View.OnClickListener {
-//            if (!Utils.isNull(floatRootView)) {
-//                if (!Utils.isNull(floatRootView?.windowToken)) {
-//                    if (!Utils.isNull(windowManager)) {
-//                        windowManager?.removeView(floatRootView)
-//                    }
-//                }
-//            }
             ViewModleMain.isShowSuspendWindow.postValue(false)
             ViewModleMain.isShowWindow.postValue(false)
         })

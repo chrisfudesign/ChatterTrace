@@ -571,7 +571,9 @@ public class DataManager {
                 NotificationHelper.showNotification(context, "", "It seems that your family member just made a bid for connection, please click this to record a response.");
                 // GET THE LOGIC OF RECORDING 30s+1min CORRECT
                 // Learn how to implement broadcast
-                ViewModleMain.isShowWindow.postValue(true);
+                if(Boolean.FALSE.equals(ViewModleMain.isShowSuspendWindow.getValue())){
+                    ViewModleMain.isShowSuspendWindow.postValue(true);
+                }
             }
         }
         deleteFilesOutOfMaxFiles();
