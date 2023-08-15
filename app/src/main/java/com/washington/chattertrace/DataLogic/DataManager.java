@@ -1,5 +1,7 @@
 package com.washington.chattertrace.DataLogic;
 
+import static com.google.android.exoplayer2.offline.DownloadService.startService;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +19,9 @@ import androidx.preference.PreferenceManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.washington.chattertrace.Helper;
+import com.washington.chattertrace.service.SuspendwindowService;
+import com.washington.chattertrace.utils.Utils;
+import com.washington.chattertrace.utils.ViewModleMain;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -565,11 +570,10 @@ public class DataManager {
             currentlyProcessingAudioFile = newitem.path;
             boolean classificationResult = classifyAudio();
             if (true) {
-
                 NotificationHelper.showNotification(context, "", "It seems that your family member just made a bid for connection, please click this to record a response.");
                 // GET THE LOGIC OF RECORDING 30s+1min CORRECT
                 // Learn how to implement broadcast
-
+                ViewModleMain.isShowWindow.postValue(true);
             }
         }
         deleteFilesOutOfMaxFiles();

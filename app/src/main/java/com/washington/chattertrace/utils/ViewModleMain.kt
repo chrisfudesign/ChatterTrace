@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 object ViewModleMain : ViewModel() {
+    @JvmField
     var isShowWindow = MutableLiveData<Boolean>()
 
     var isShowSuspendWindow = MutableLiveData<Boolean>()
