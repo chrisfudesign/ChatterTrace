@@ -9,6 +9,7 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
 import androidx.lifecycle.LifecycleService
 import com.washington.chattertrace.R
+import com.washington.chattertrace.recordings.RecordingsScreen
 import com.washington.chattertrace.utils.ItemViewTouchListener
 import com.washington.chattertrace.utils.Utils
 import com.washington.chattertrace.utils.ViewModleMain
@@ -77,10 +78,14 @@ class SuspendwindowService : LifecycleService() {
         }
 
         floatRootView = LayoutInflater.from(this).inflate(R.layout.activity_float_item, null)
+        floatRootView?.setOnTouchListener(ItemViewTouchListener(layoutParam, windowManager))
+        windowManager.addView(floatRootView, layoutParam)
+
         bubbleButton = floatRootView?.findViewById(R.id.bubble_button)
         bubbleButton?.setOnClickListener(View.OnClickListener {
-            ViewModleMain.isShowSuspendWindow.postValue(false)
-            ViewModleMain.isShowWindow.postValue(false)
+//            ViewModleMain.isShowSuspendWindow.postValue(false)
+//            ViewModleMain.isShowWindow.postValue(false)
+            ViewModleMain.NavController.value?.navigate("recording")
         })
 
         bubbleClose = floatRootView?.findViewById(R.id.bubble_close)
@@ -88,7 +93,5 @@ class SuspendwindowService : LifecycleService() {
             ViewModleMain.isShowSuspendWindow.postValue(false)
             ViewModleMain.isShowWindow.postValue(false)
         })
-        floatRootView?.setOnTouchListener(ItemViewTouchListener(layoutParam, windowManager))
-        windowManager.addView(floatRootView, layoutParam)
     }
 }

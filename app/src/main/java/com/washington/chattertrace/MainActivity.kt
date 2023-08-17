@@ -186,6 +186,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
     val navController = rememberNavController()
+    ViewModleMain.NavController.postValue(navController)
 
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) },
