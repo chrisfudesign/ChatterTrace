@@ -82,11 +82,9 @@ class SuspendwindowService : LifecycleService() {
         windowManager.addView(floatRootView, layoutParam)
 
         bubbleButton = floatRootView?.findViewById(R.id.bubble_button)
-        bubbleButton?.setOnClickListener(View.OnClickListener {
-//            ViewModleMain.isShowSuspendWindow.postValue(false)
-//            ViewModleMain.isShowWindow.postValue(false)
+        floatRootView?.setOnClickListener {
             ViewModleMain.NavController.value?.navigate("recording")
-        })
+        }
 
         bubbleClose = floatRootView?.findViewById(R.id.bubble_close)
         bubbleClose?.setOnClickListener(View.OnClickListener {
