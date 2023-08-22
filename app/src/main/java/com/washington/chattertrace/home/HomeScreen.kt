@@ -219,14 +219,14 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
             }
         }
 
-        Button(onClick = {
-            recordingManager?.StartRecording(dataManager?.getRecordingNameOfTimeWithPrefix(""), record_time_after_user_tap)
-        }) {
-            Text(
-                text = "Mimic tap on notification",
-                fontSize = 20.sp
-            )
-        }
+//        Button(onClick = {
+//            recordingManager?.StartRecording(dataManager?.getRecordingNameOfTimeWithPrefix(""), record_time_after_user_tap)
+//        }) {
+//            Text(
+//                text = "Mimic tap on notification",
+//                fontSize = 20.sp
+//            )
+//        }
     }
 }
 
