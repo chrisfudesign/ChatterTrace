@@ -9,6 +9,7 @@ import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
 import android.util.Log
 import android.view.View
@@ -78,7 +79,7 @@ class MainActivity : ComponentActivity() {
             startService(Intent(this, SuspendwindowService::class.java))
             Utils.checkSuspendedWindowPermission(this) {
                 isReceptionShow = true
-                ViewModleMain.isShowSuspendWindow.postValue(true)
+                Utils.showBubblewithTimeout(this)
             }
         }
 
@@ -99,7 +100,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         if(ViewModleMain.isShowSuspendWindow.value == false){
-            ViewModleMain.isShowSuspendWindow.postValue(true)
+            Utils.showBubblewithTimeout(this)
         }
     }
 

@@ -5,15 +5,27 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Build
+import android.os.Handler
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.ColorInt
+import androidx.compose.ui.graphics.Color
+import com.washington.chattertrace.R
 import java.util.*
 
 object Utils {
     const val REQUEST_FLOAT_CODE=1001
+    const val SHOW_BUBBLE = 1000L
+    const val FADE_BUBBLE = 5000L
+    const val DISAPPEAR_BUBBLE = 10000L
 
     fun isServiceRunning(context: Context, ServiceName: String): Boolean {
         if (TextUtils.isEmpty(ServiceName)) {
@@ -28,6 +40,14 @@ object Utils {
             }
         }
         return false
+    }
+
+    @JvmStatic
+    fun showBubblewithTimeout(context: Context?){
+        //Show the bubble after timeout
+        Handler().postDelayed({
+            ViewModleMain.isShowSuspendWindow.postValue(true)
+        }, SHOW_BUBBLE)
     }
 
    private fun commonROMPermissionCheck(context: Context?): Boolean {

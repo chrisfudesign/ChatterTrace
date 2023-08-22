@@ -33,9 +33,6 @@ fun Navigation(navController: NavHostController, recordingManager: RecordingMana
         composable(NavigationItem.Recordings.route) {
             RecordingsScreen(navController)
         }
-        composable("recording") {
-            RecordingsScreen(navController)
-        }
         composable(NavigationItem.Reflections.route) {
             ReflectionsScreen(navController)
         }

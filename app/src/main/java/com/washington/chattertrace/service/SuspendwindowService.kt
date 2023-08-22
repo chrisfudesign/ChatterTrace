@@ -3,6 +3,7 @@ package com.washington.chattertrace.service
 import android.annotation.SuppressLint
 import android.graphics.PixelFormat
 import android.os.Build
+import android.os.Handler
 import android.util.DisplayMetrics
 import android.view.*
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -62,7 +63,7 @@ class SuspendwindowService : LifecycleService() {
      */
     @SuppressLint("ClickableViewAccessibility")
     private fun showWindow() {
-        //获取WindowManager
+        //get WindowManager
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         val outMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(outMetrics)
@@ -89,11 +90,22 @@ class SuspendwindowService : LifecycleService() {
         floatRootView?.setOnClickListener {
             if(recordingMap.isNotEmpty()){
                 val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
-                val lastDateString = recordingMap.keys.first().toString().filter { it.isLetterOrDigit() }.format(formatter)
+                val lastDateString = recordingMap.keys.last().toString().filter { it.isLetterOrDigit() }.format(formatter)
                 //Toast.makeText(this, lastDateString, Toast.LENGTH_LONG).show()
                 ViewModleMain.NavController.value?.navigate("recordingDetail/${lastDateString}")
             }
         }
+
+        //Bubble fade after timeout
+        Handler().postDelayed({
+            bubbleButton?.alpha = 0.3f
+        }, Utils.FADE_BUBBLE)
+
+        //Bubble disappear after timeout
+        Handler().postDelayed({
+            ViewModleMain.isShowSuspendWindow.postValue(false)
+            ViewModleMain.isShowWindow.postValue(false)
+        }, Utils.DISAPPEAR_BUBBLE)
 
         bubbleClose = floatRootView?.findViewById(R.id.bubble_close)
         bubbleClose?.setOnClickListener(View.OnClickListener {

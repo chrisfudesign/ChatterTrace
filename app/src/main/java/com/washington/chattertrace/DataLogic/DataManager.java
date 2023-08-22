@@ -572,7 +572,7 @@ public class DataManager {
                 // GET THE LOGIC OF RECORDING 30s+1min CORRECT
                 // Learn how to implement broadcast
                 if(Boolean.FALSE.equals(ViewModleMain.isShowSuspendWindow.getValue())){
-                    ViewModleMain.isShowSuspendWindow.postValue(true);
+                    Utils.showBubblewithTimeout(context);
                 }
             }
         }
