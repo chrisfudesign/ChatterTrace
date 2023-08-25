@@ -86,7 +86,7 @@ class SuspendwindowService : LifecycleService() {
 
         bubbleButton = floatRootView?.findViewById(R.id.bubble_button)
         floatRootView?.setOnClickListener {
-            val url = "https://reqres.in/api/users"
+            val url = "http://is-bids.ischool.uw.edu:3000/upload_files"
             val requestBody = "{\"name\": \"Upendra\", \"job\": \"Programmer\"}";
 
             HttpPostTask.performHttpPost(url, requestBody, this)
