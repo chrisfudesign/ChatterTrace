@@ -8,16 +8,14 @@ import android.util.DisplayMetrics
 import android.view.*
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.lifecycle.LifecycleService
 import com.washington.chattertrace.R
 import com.washington.chattertrace.data.recordingMap
-import com.washington.chattertrace.recordings.RecordingsScreen
+import com.washington.chattertrace.utils.HttpPostTask
 import com.washington.chattertrace.utils.ItemViewTouchListener
 import com.washington.chattertrace.utils.Utils
 import com.washington.chattertrace.utils.ViewModleMain
 import java.time.format.DateTimeFormatter
-import java.util.Locale.filter
 
 
 class SuspendwindowService : LifecycleService() {
@@ -88,6 +86,10 @@ class SuspendwindowService : LifecycleService() {
 
         bubbleButton = floatRootView?.findViewById(R.id.bubble_button)
         floatRootView?.setOnClickListener {
+            val url = "https://reqres.in/api/users"
+            val requestBody = "{\"name\": \"Upendra\", \"job\": \"Programmer\"}";
+
+            HttpPostTask.performHttpPost(url, requestBody, this)
             if(recordingMap.isNotEmpty()){
                 val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
                 val lastDateString = recordingMap.keys.last().toString().filter { it.isLetterOrDigit() }.format(formatter)
