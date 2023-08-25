@@ -2,6 +2,7 @@ package com.washington.chattertrace.recordings
 
 import android.net.Uri
 import android.os.Environment
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -37,6 +38,7 @@ import com.google.android.exoplayer2.upstream.FileDataSource
 import com.google.android.exoplayer2.util.MimeTypes
 import com.washington.chattertrace.R
 import com.washington.chattertrace.data.recordingMap
+import com.washington.chattertrace.utils.HttpPostTask
 import kotlinx.coroutines.delay
 import java.io.File
 import java.time.LocalDate
@@ -237,12 +239,19 @@ fun RecordingRow(audio: File, isUploaded: Boolean) {
                     tint = Color.Unspecified
                 )
             } else {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_upload),
-                    contentDescription = "Localized description",
-                    tint = Color.Unspecified,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
+                IconButton(
+                    onClick = {
+                        Log.i("NETWORK", "CLICKED")
+                        HttpPostTask.upload("http://is-bids.ischool.uw.edu:3000/upload_files", audio)
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_upload),
+                        contentDescription = "Localized description",
+                        tint = Color.Unspecified,
+                        modifier = Modifier.padding(start = 16.dp),
+                    )
+                }
             }
 
             Icon(
