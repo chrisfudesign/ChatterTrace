@@ -86,10 +86,6 @@ class SuspendwindowService : LifecycleService() {
 
         bubbleButton = floatRootView?.findViewById(R.id.bubble_button)
         floatRootView?.setOnClickListener {
-            val url = "http://is-bids.ischool.uw.edu:3000/upload_files"
-            val requestBody = "{\"name\": \"Upendra\", \"job\": \"Programmer\"}";
-
-            HttpPostTask.performHttpPost(url, requestBody, this)
             if(recordingMap.isNotEmpty()){
                 val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
                 val lastDateString = recordingMap.keys.last().toString().filter { it.isLetterOrDigit() }.format(formatter)

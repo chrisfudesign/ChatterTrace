@@ -242,7 +242,7 @@ fun RecordingRow(audio: File, isUploaded: Boolean) {
                 IconButton(
                     onClick = {
                         Log.i("NETWORK", "CLICKED")
-                        HttpPostTask.upload("http://is-bids.ischool.uw.edu:3000/upload_files", audio)
+                        HttpPostTask.upload("http://is-bids.ischool.uw.edu:3000/upload_files", audio, context)
                     }
                 ) {
                     Icon(
