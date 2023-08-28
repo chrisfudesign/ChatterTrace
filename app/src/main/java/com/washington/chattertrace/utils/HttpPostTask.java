@@ -29,10 +29,10 @@ import okhttp3.Response;
 public class HttpPostTask {
     private static final Executor executor = Executors.newSingleThreadExecutor();
 
-    public static void upload(String url, File file, Context context) {
+    public static void upload(String url, File file) {
         executor.execute(() -> {
             try {
-                Log.i("NETWORK", "okhttp");
+                Log.i("NETWORK", "okhttp " + file.getName());
                 OkHttpClient client = new OkHttpClient();
                 RequestBody formBody = new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)

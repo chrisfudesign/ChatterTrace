@@ -74,7 +74,15 @@ fun RecordingDetailScreen(dateString: String) {
                 }
             },
             actions = {
-                IconButton(onClick = { /* Upload all action here */ }) {
+                IconButton(onClick = {
+                    val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+                    val localDate = LocalDate.parse(dateString, formatter)
+
+                    recordingMap[localDate]?.forEach { recording ->
+                        Log.i("NETWORK", "DETAIL UPLOAD ALL")
+                        HttpPostTask.upload("http://is-bids.ischool.uw.edu:3000/upload_files", recording.audio)
+                    }
+                }) {
                     Text(
                         text = "Upload All",
                         fontWeight = FontWeight.Light,
@@ -245,7 +253,7 @@ fun RecordingRow(recording: Recording) {
                 IconButton(
                     onClick = {
                         Log.i("NETWORK", "CLICKED")
-                        HttpPostTask.upload("http://is-bids.ischool.uw.edu:3000/upload_files", audio, context)
+                        HttpPostTask.upload("http://is-bids.ischool.uw.edu:3000/upload_files", audio)
                         recording.isUploaded = true
                     }
                 ) {
