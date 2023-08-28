@@ -12,7 +12,7 @@ var DIR_PATH = Environment.getExternalStorageDirectory().absolutePath +
  * Data classes and data structures
  */
 data class RecordingFolder(val recordings: List<Recording>, val date: LocalDate, val isUploaded: Boolean)
-data class Recording(val id: String, val audio: File, val isUploaded: Boolean)
+data class Recording(val id: String, val audio: File, var isUploaded: Boolean)
 val recordingMap: HashMap<LocalDate, List<Recording>> = hashMapOf()
 
 fun dummyDataSetup() {

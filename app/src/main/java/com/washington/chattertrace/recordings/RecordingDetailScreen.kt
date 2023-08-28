@@ -37,6 +37,7 @@ import com.google.android.exoplayer2.upstream.DataSpec
 import com.google.android.exoplayer2.upstream.FileDataSource
 import com.google.android.exoplayer2.util.MimeTypes
 import com.washington.chattertrace.R
+import com.washington.chattertrace.data.Recording
 import com.washington.chattertrace.data.recordingMap
 import com.washington.chattertrace.utils.HttpPostTask
 import kotlinx.coroutines.delay
@@ -110,7 +111,7 @@ fun RecordingList(dateString: String) {
 
             recordingMap[localDate]?.forEach { recording ->
                 var filePath = DIR_PATH + recording.audio.name
-                RecordingRow(recording.audio, recording.isUploaded)
+                RecordingRow(recording)
             }
             Questionnaire()
         }
@@ -120,7 +121,9 @@ fun RecordingList(dateString: String) {
 
 @ExperimentalMaterial3Api
 @Composable
-fun RecordingRow(audio: File, isUploaded: Boolean) {
+fun RecordingRow(recording: Recording) {
+    var audio = recording.audio
+    var isUploaded = recording.isUploaded
     // State to track the current position of the audio recording
     var currentPosition by rememberSaveable { mutableStateOf(0L) }
 
@@ -243,6 +246,7 @@ fun RecordingRow(audio: File, isUploaded: Boolean) {
                     onClick = {
                         Log.i("NETWORK", "CLICKED")
                         HttpPostTask.upload("http://is-bids.ischool.uw.edu:3000/upload_files", audio, context)
+                        recording.isUploaded = true
                     }
                 ) {
                     Icon(

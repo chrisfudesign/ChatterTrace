@@ -43,7 +43,6 @@ public class HttpPostTask {
                 Response response = null;
                 response = client.newCall(request).execute();
                 Log.i("NETWORK", response.toString());
-                Toast.makeText(context, "File uploaded: " + file.getName(), Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
