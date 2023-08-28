@@ -81,6 +81,7 @@ fun RecordingDetailScreen(dateString: String) {
                     recordingMap[localDate]?.forEach { recording ->
                         Log.i("NETWORK", "DETAIL UPLOAD ALL")
                         HttpPostTask.upload("http://is-bids.ischool.uw.edu:3000/upload_files", recording.audio)
+                        recording.isUploaded = true
                     }
                 }) {
                     Text(
