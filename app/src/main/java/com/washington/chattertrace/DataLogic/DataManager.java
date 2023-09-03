@@ -134,7 +134,11 @@ public class DataManager {
                 segmentedAudio[i] = Arrays.copyOfRange(processedAudio, i * segmentedAudioLength, i * segmentedAudioLength + segmentedAudioLength);
                 tensorAudio.load(segmentedAudio[i]);
                 List<Classifications> output = classifier.classify(tensorAudio);
-                segmentedPrediction[i] = output.get(0).getCategories().get(0).getLabel();
+                try {
+                    segmentedPrediction[i] = output.get(0).getCategories().get(0).getLabel();
+                } catch (IndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                }
             }
 
             for (int i = 0; i < numOfSegmentForAudio - 1; i++) {
