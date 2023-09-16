@@ -99,9 +99,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        if(ViewModleMain.isShowSuspendWindow.value == false){
-            Utils.showBubblewithTimeout(this)
-        }
+//        if(ViewModleMain.isShowSuspendWindow.value == false){
+//            Utils.showBubblewithTimeout(this)
+//        }
     }
 
 //    override fun onNewIntent(intent: Intent?) {
