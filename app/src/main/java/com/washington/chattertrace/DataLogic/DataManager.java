@@ -88,7 +88,7 @@ public class DataManager {
 
     private String currentlyProcessingAudioFile = "";
 
-    private int numOfSegmentForAudio = 10;
+    private int numOfSegmentForAudio = 5;
 
     private AudioClassifier classifier;
     private TensorAudio tensorAudio;
@@ -134,10 +134,13 @@ public class DataManager {
                 segmentedAudio[i] = Arrays.copyOfRange(processedAudio, i * segmentedAudioLength, i * segmentedAudioLength + segmentedAudioLength);
                 tensorAudio.load(segmentedAudio[i]);
                 List<Classifications> output = classifier.classify(tensorAudio);
-                try {
-                    segmentedPrediction[i] = output.get(0).getCategories().get(0).getLabel();
-                } catch (IndexOutOfBoundsException e) {
-                    e.printStackTrace();
+                if(output != null && output.get(0) != null && output.get(0).getCategories().size() >0 &&
+                        output.get(0).getCategories().get(0) != null){
+                    try {
+                        segmentedPrediction[i] = output.get(0).getCategories().get(0).getLabel();
+                    } catch (IndexOutOfBoundsException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
