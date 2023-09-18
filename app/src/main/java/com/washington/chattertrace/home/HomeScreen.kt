@@ -21,12 +21,15 @@ import com.washington.chattertrace.DataLogic.NotificationHelper
 import com.washington.chattertrace.R
 import com.washington.chattertrace.RecordingLogic.RecordingManager
 import kotlinx.coroutines.delay
+import java.util.Timer
+import java.util.TimerTask
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
     var isButtonClicked by rememberSaveable { mutableStateOf(false) }
 
+    val timer = Timer()
     var elapsedTime by rememberSaveable { mutableStateOf(0L) }
 
     val scope = rememberCoroutineScope()
@@ -35,13 +38,26 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
     val preceding_mode = true
     val record_time_after_user_tap = 60 // After user tap, record 60s more so the total file would be 90s long
 
-    LaunchedEffect(isButtonClicked) {
-        if (isButtonClicked) {
-            while (true) {
-                delay(1000L) // Delay for 1 second
+//    LaunchedEffect(isButtonClicked) {
+//        if (isButtonClicked) {
+//            while (true) {
+//                delay(1000L) // Delay for 1 second
+//                elapsedTime += 1L
+//            }
+//        }
+//    }
+
+    fun startTimer() {
+        timer.scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                // This code will run every 1000 milliseconds (1 second)
                 elapsedTime += 1L
             }
-        }
+        }, 0L, 1000L) // Initial delay of 0 milliseconds, repeat every 1000 milliseconds
+    }
+
+    fun stopTimer() {
+        timer.cancel()
     }
 
     Column(
@@ -172,6 +188,7 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
                             ), preceding_time
                         )
                     }
+                    startTimer()
                     isButtonClicked = !isButtonClicked
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -194,6 +211,7 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
                     if (recordingManager?.isRecording() == true) {
                         recordingManager.StopRecordingSilently()
                         elapsedTime = 0L
+                        stopTimer()
                     }
 //                    if (recordingManager?.isRecording() == true) {
 //                        recordingManager?.StopRecording();

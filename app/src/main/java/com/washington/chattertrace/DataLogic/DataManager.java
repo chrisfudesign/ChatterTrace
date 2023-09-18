@@ -145,6 +145,7 @@ public class DataManager {
             }
 
             for (int i = 0; i < numOfSegmentForAudio - 1; i++) {
+                System.out.println(segmentedPrediction[i]);
                 if (segmentedPrediction[i] == "Speech") {
                     // Trigger notification
                     return true;
@@ -574,7 +575,7 @@ public class DataManager {
             }
             currentlyProcessingAudioFile = newitem.path;
             boolean classificationResult = classifyAudio();
-            if (true) {
+            if (classificationResult) {
                 NotificationHelper.showNotification(context, "", "It seems that your family member just made a bid for connection, please click this to record a response.");
                 // GET THE LOGIC OF RECORDING 30s+1min CORRECT
                 // Learn how to implement broadcast
