@@ -42,6 +42,7 @@ import com.washington.chattertrace.data.recordingMap
 import com.washington.chattertrace.utils.HttpPostTask
 import kotlinx.coroutines.delay
 import java.io.File
+import java.lang.Exception
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.time.Duration.Companion.seconds
@@ -161,20 +162,22 @@ fun RecordingRow(recording: Recording) {
 
     exoPlayer.addListener(object : Player.Listener {
         override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-            when (playbackState) {
-                ExoPlayer.STATE_BUFFERING -> {}
-                ExoPlayer.STATE_ENDED -> {
-                    /// reset player
-                    exoPlayer.pause()
-                    exoPlayer.seekTo(0)
-                    isPlaying = false
-                    currentPosition = 0L
+            try{
+                when (playbackState) {
+                    ExoPlayer.STATE_BUFFERING -> {}
+                    ExoPlayer.STATE_ENDED -> {
+                        /// reset player
+                        exoPlayer.pause()
+                        exoPlayer.seekTo(0)
+                        isPlaying = false
+                        currentPosition = 0L
+                    }
+                    ExoPlayer.STATE_IDLE -> {}
+                    ExoPlayer.STATE_READY -> {}
+                    else -> {}
                 }
-                ExoPlayer.STATE_IDLE -> {}
-                ExoPlayer.STATE_READY -> {}
-                else -> {}
+            }catch (error: ExoPlaybackException){
             }
-
         }
 
         fun onPlayWhenReadyCommitted() {}

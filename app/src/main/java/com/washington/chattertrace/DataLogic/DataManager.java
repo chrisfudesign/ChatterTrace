@@ -181,6 +181,10 @@ public class DataManager {
             int dataSize = (int) (fileInputStream.getChannel().size() - 44);
             int numSamples = dataSize / 2; // 16-bit = 2 bytes per sample
 
+            if(numSamples <= 0){
+                throw new IOException("Cannot read emtpy WAV file");
+            }
+
             // Read audio data into a short array
             float[] audioData = new float[numSamples];
             byte[] buffer = new byte[2];
