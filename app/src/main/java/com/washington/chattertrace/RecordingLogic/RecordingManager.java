@@ -8,12 +8,15 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.display.DisplayManager;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.util.Log;
+import android.view.Display;
 
 import androidx.core.app.NotificationCompat;
 
@@ -222,6 +225,7 @@ public class RecordingManager extends Service {
         if (recorder.isRecording()){
             StopRecordingSilently();
         }
+
         should_keep = true;
         recorder.setFilePath(filename);
         recorder.Start();
@@ -261,11 +265,25 @@ public class RecordingManager extends Service {
      * @param filename the filename(full path) to be saved
      */
     public void StartRecordingSilently(String filename){
+        Boolean displayOn = false;
+        DisplayManager dm = (DisplayManager) this.getSystemService(Context.DISPLAY_SERVICE);
+        for (Display display : dm.getDisplays()) {
+            Log.d("SCREENWAKE", "display silent: " + display.getState() + " " + recorder.isRecording());
+            if (display.getState()  == Display.STATE_ON) {
+                displayOn = true;
+            }
+        }
+
         if (recorder.isRecording()){
             StopRecordingSilently();
         }
+
+        if(!displayOn){
+            return;
+        }
         if (precedingTime <= 0) return;
 //        Log.d("[Log]", "Recording silent start");
+
         should_keep = false;
         recorder.setFilePath(filename);
         recorder.Start();
