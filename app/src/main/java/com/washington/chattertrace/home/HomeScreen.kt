@@ -24,12 +24,13 @@ import kotlinx.coroutines.delay
 import java.util.Timer
 import java.util.TimerTask
 
+var timer: Timer? = null
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
     var isButtonClicked by rememberSaveable { mutableStateOf(false) }
 
-    val timer = Timer()
     var elapsedTime by rememberSaveable { mutableStateOf(0L) }
 
     val scope = rememberCoroutineScope()
@@ -48,7 +49,7 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
 //    }
 
     fun startTimer() {
-        timer.scheduleAtFixedRate(object : TimerTask() {
+        timer!!.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 // This code will run every 1000 milliseconds (1 second)
                 elapsedTime += 1L
@@ -57,7 +58,11 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
     }
 
     fun stopTimer() {
-        timer.cancel()
+        if (timer != null) {
+            timer!!.cancel()
+            timer!!.purge()
+            timer = null
+        }
     }
 
     Column(
@@ -188,7 +193,10 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
                             ), preceding_time
                         )
                     }
-                    startTimer()
+                    if (timer == null) {
+                        timer = Timer()
+                        startTimer()
+                    }
                     isButtonClicked = !isButtonClicked
                 },
                 colors = ButtonDefaults.buttonColors(
