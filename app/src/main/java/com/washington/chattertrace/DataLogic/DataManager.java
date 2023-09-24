@@ -3,6 +3,7 @@ package com.washington.chattertrace.DataLogic;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.display.DisplayManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -11,6 +12,7 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
+import android.view.Display;
 
 import androidx.preference.PreferenceManager;
 
@@ -518,6 +520,19 @@ public class DataManager {
         newitem.duration = duration;
         newitem.uploaded = false;
         newitem.should_keep = shouldkeep;
+
+        Boolean displayOn = false;
+        DisplayManager dm = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
+        for (Display display : dm.getDisplays()) {
+            Log.d("SCREENWAKE", "display silent: " + display.getState());
+            if (display.getState()  == Display.STATE_ON) {
+                displayOn = true;
+            }
+        }
+
+        if(!displayOn){
+            return;
+        }
 
         if (shouldkeep) {
             if (preceding_mode){
