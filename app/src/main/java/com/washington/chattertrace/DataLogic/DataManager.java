@@ -122,6 +122,7 @@ public class DataManager {
     }
 
     public boolean classifyAudio() {
+        Log.d("SCREENWAKE", "start classify audio");
         if (!Objects.equals(currentlyProcessingAudioFile, "")) {
             float[] processedAudio = decodeWavToFloatArray(currentlyProcessingAudioFile);
             assert processedAudio != null;
@@ -148,7 +149,9 @@ public class DataManager {
 
             for (int i = 0; i < numOfSegmentForAudio - 1; i++) {
                 System.out.println(segmentedPrediction[i]);
-                if (segmentedPrediction[i] == "Speech") {
+                Log.d("SCREENWAKE", "type of prediction: " + segmentedPrediction[i]);
+                if (Objects.equals(segmentedPrediction[i], "Speech")) {
+                    Log.d("SCREENWAKE", "found speech");
                     // Trigger notification
                     return true;
                 }
@@ -531,6 +534,7 @@ public class DataManager {
         }
 
         if(!displayOn){
+            Log.d("SCREENWAKE", "display off, return");
             return;
         }
 
@@ -594,6 +598,8 @@ public class DataManager {
             }
             currentlyProcessingAudioFile = newitem.path;
             boolean classificationResult = classifyAudio();
+            Log.d("SCREENWAKE", "classification result: " + classificationResult);
+
             if (classificationResult) {
                 NotificationHelper.showNotification(context, "", "It seems that your family member just made a bid for connection, please click this to record a response.");
                 // GET THE LOGIC OF RECORDING 30s+1min CORRECT
