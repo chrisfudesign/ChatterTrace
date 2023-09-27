@@ -150,7 +150,11 @@ public class DataManager {
             for (int i = 0; i < numOfSegmentForAudio - 1; i++) {
                 System.out.println(segmentedPrediction[i]);
                 Log.d("SCREENWAKE", "type of prediction: " + segmentedPrediction[i]);
-                if (Objects.equals(segmentedPrediction[i], "Speech")) {
+                if (Objects.equals(segmentedPrediction[i], "Speech") ||
+                        Objects.equals(segmentedPrediction[i], "Roaring cats (lions, tigers)") ||
+                        Objects.equals(segmentedPrediction[i], "Music")||
+                        Objects.equals(segmentedPrediction[i], "Breathing")||
+                        Objects.equals(segmentedPrediction[i], "Snoring")) {
                     Log.d("SCREENWAKE", "found speech");
                     // Trigger notification
                     return true;
