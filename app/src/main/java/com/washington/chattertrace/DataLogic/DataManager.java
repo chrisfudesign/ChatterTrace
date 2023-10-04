@@ -19,6 +19,7 @@ import androidx.preference.PreferenceManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.washington.chattertrace.Helper;
+import com.washington.chattertrace.MainActivityKt;
 import com.washington.chattertrace.service.SuspendwindowService;
 import com.washington.chattertrace.utils.Utils;
 import com.washington.chattertrace.utils.ViewModleMain;
@@ -604,6 +605,8 @@ public class DataManager {
             boolean classificationResult = classifyAudio();
             Log.d("SCREENWAKE", "classification result: " + classificationResult);
 
+            //TODO: Currently will cause crash, need repair
+            // MainActivityKt.getRecordingManager().StopRecording();
             if (classificationResult) {
                 NotificationHelper.showNotification(context, "", "It seems that your family member just made a bid for connection, please click this to record a response.");
                 // GET THE LOGIC OF RECORDING 30s+1min CORRECT

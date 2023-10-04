@@ -43,11 +43,10 @@ import com.washington.chattertrace.utils.ViewModleMain
 import java.io.IOException
 import kotlin.math.roundToInt
 
-
+public var recordingManager: RecordingManager? = null
 class MainActivity : ComponentActivity() {
     private var floatRootView: View? = null//floating window View
     private var isReceptionShow = false
-    private var recordingManager: RecordingManager? = null
     private var dataManager: DataManager? = null
     var context: Context? = null
     private val REQUEST_ID_MULTIPLE_PERMISSIONS = 1
