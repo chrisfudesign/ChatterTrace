@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
@@ -49,6 +50,8 @@ public class RecordingManager extends Service {
     private BasicRecorder recorder = null;
     PowerManager.WakeLock wakeLock;// for always recording mode, the phone cpu won't sleep even in black screen. Drain power quickly
     private final IBinder mBinder = new LocalBinder();
+
+    private Boolean classificationResult = Boolean.FALSE;
 
     /**
      * set always awake mode (even user lock screen)
@@ -284,7 +287,14 @@ public class RecordingManager extends Service {
             recorder.Stop();
         }
         if (manager != null) {
-            manager.newRecordingAdded(recorder.getFilePath(), recorder.getStartDateTime(), recorder.getDuration(), should_keep, should_precede, should_mergeprecede);
+            if(classificationResult){
+                classificationResult = false;
+                manager.newRecordingAdded(recorder.getFilePath(), recorder.getStartDateTime(), recorder.getDuration(), true, true, should_mergeprecede);
+                Log.d("SCREENWAKE", "classification result GET: " + classificationResult);
+            }else {
+                classificationResult = manager.newRecordingAdded(recorder.getFilePath(), recorder.getStartDateTime(), recorder.getDuration(), should_keep, should_precede, should_mergeprecede);
+                Log.d("SCREENWAKE", "classification result ADD: " + classificationResult);
+            }
         }
     }
 

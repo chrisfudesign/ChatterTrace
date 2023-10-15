@@ -519,7 +519,7 @@ public class DataManager {
      *                       Because they are the preceding recordings of the formal recording file
      * @param merge_with_preceding  if shouldkeep is true, whether the current file should merge with the preceding file into one file.
      */
-    public void newRecordingAdded(String filename, String createdate, int duration, boolean shouldkeep, boolean preceding_mode, boolean merge_with_preceding) {
+    public Boolean newRecordingAdded(String filename, String createdate, int duration, boolean shouldkeep, boolean preceding_mode, boolean merge_with_preceding) {
         RecordItem newitem = new RecordItem();
         newitem.path = filename;
         String[] tokens = filename.split("/");
@@ -530,6 +530,7 @@ public class DataManager {
         newitem.should_keep = shouldkeep;
 
         Boolean displayOn = false;
+        Boolean detectedBid = false;
         DisplayManager dm = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
         for (Display display : dm.getDisplays()) {
             Log.d("SCREENWAKE", "display silent: " + display.getState());
@@ -540,7 +541,7 @@ public class DataManager {
 
         if(!displayOn){
             Log.d("SCREENWAKE", "display off, return");
-            return;
+            return detectedBid;
         }
 
         if (shouldkeep) {
@@ -548,9 +549,10 @@ public class DataManager {
                 // if in preceding mode and the shouldkeep is true, it means the recording file is triggered intentionally
                 // rather than the background recording. Thus we should store its preceding two clips
                 int bfsize = mShouldNotKeepBuffer.size();
-
+                Log.d("SCREENWAKE", "ALL PASS ");
                 //if should merge files
                 if (merge_with_preceding){
+                    Log.d("SCREENWAKE", "merge with preceding");
                     // we set bfsize - 2 because we want preceding two file clips, as only one preceding might not be long enough
                     float mtime = 0;
                     ArrayList<String> mergelist = new ArrayList<String>();
@@ -561,7 +563,6 @@ public class DataManager {
                         mergelist.add(item.path);
                     }
                     newitem.duration += mtime;
-                    mergelist.add(filename);
                     MergeThread mtd = new MergeThread(mergelist.toArray(new String[0]));
                     mtd.start();
                 }
@@ -613,11 +614,13 @@ public class DataManager {
                 // Learn how to implement broadcast
                 if(Boolean.FALSE.equals(ViewModleMain.isShowSuspendWindow.getValue())){
                     Utils.showBubblewithTimeout(context);
+                    detectedBid = true;
                 }
             }
         }
         deleteFilesOutOfMaxFiles();
         processUpload(filename, shouldkeep);
+        return detectedBid;
     }
 
 //    public void pushNotification() {
