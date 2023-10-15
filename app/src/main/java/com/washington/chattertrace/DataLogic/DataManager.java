@@ -554,7 +554,7 @@ public class DataManager {
                     // we set bfsize - 2 because we want preceding two file clips, as only one preceding might not be long enough
                     float mtime = 0;
                     ArrayList<String> mergelist = new ArrayList<String>();
-                    for (int i = bfsize - 1; i >= Math.max(0, bfsize - 2); --i) {
+                    for (int i = bfsize - 1; i >= Math.max(0, bfsize - 3); --i) {
                         RecordItem item = mShouldNotKeepBuffer.remove(i);
                         mtime += item.duration;
                         new deleteAsyncTask(recordItemDAO).execute(item);
