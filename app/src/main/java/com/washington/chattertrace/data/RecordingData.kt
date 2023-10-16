@@ -21,7 +21,10 @@ fun dummyDataSetup() {
     // for each audio, make a recording object and add it to the map
     for (file in fileList) {
         // extract date from the audio file
-        val dateString = file.name.substringBeforeLast('_')
+        var dateString = file.name.substringBeforeLast('_')
+        if(dateString.startsWith("preceding")){
+            continue;
+        }
         val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
         val localDate = LocalDate.parse(dateString, formatter)
 

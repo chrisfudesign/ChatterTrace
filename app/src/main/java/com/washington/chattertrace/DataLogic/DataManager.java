@@ -563,13 +563,17 @@ public class DataManager {
                         mergelist.add(item.path);
                     }
                     newitem.duration += mtime;
-                    MergeThread mtd = new MergeThread(mergelist.toArray(new String[0]));
-                    mtd.start();
+                    Log.d("SCREENWAKE", mergelist.toString());
+                    Log.d("SCREENWAKE", Arrays.toString(mergelist.toArray(new String[0])));
+                    if(!mergelist.isEmpty()){
+                        MergeThread mtd = new MergeThread(mergelist.toArray(new String[0]));
+                        mtd.start();
+                    }
                 }
                 //else we save them one by one
                 else {
                     // we set bfsize - 2 because we want preceding two file clips, as only one preceding might not be long enough
-                    for (int i = bfsize - 1; i >= Math.max(0, bfsize - 2); --i) {
+                    for (int i = bfsize - 1; i >= Math.max(0, bfsize - 3); --i) {
                         RecordItem item = mShouldNotKeepBuffer.remove(i);
                         item.should_keep = true;
                         mFolderFileList.add(0, item);
@@ -771,7 +775,7 @@ public class DataManager {
                         f.delete();
                     }
                     File from = new File(outpath);
-                    File to = new File(fnames[fnames.length-1]);
+                    File to = new File(fnames[fnames.length-1].replace("preceding", ""));
                     from.renameTo(to);
                     deleteFilesOutOfMaxFiles();
                     processUpload(fnames[fnames.length-1], true);

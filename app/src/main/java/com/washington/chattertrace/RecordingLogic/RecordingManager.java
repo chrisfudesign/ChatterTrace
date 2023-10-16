@@ -287,9 +287,11 @@ public class RecordingManager extends Service {
             recorder.Stop();
         }
         if (manager != null) {
+            //classificationResult = manager.newRecordingAdded(recorder.getFilePath(), recorder.getStartDateTime(), recorder.getDuration(), true, true, true);
+
             if(classificationResult){
                 classificationResult = false;
-                manager.newRecordingAdded(recorder.getFilePath(), recorder.getStartDateTime(), recorder.getDuration(), true, true, should_mergeprecede);
+                manager.newRecordingAdded(recorder.getFilePath(), recorder.getStartDateTime(), recorder.getDuration(), true, true, true);
                 Log.d("SCREENWAKE", "classification result GET: " + classificationResult);
             }else {
                 classificationResult = manager.newRecordingAdded(recorder.getFilePath(), recorder.getStartDateTime(), recorder.getDuration(), should_keep, should_precede, should_mergeprecede);
