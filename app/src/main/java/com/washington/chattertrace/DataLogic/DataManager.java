@@ -125,7 +125,13 @@ public class DataManager {
     public boolean classifyAudio() {
         Log.d("SCREENWAKE", "start classify audio");
         if (!Objects.equals(currentlyProcessingAudioFile, "")) {
-            float[] processedAudio = decodeWavToFloatArray(currentlyProcessingAudioFile);
+            float[] processedAudio;
+            try{
+                processedAudio = decodeWavToFloatArray(currentlyProcessingAudioFile);
+            }catch (Exception e){
+                e.printStackTrace();
+                return false;
+            }
             assert processedAudio != null;
             if (processedAudio.length < numOfSegmentForAudio) {
                 return false;
