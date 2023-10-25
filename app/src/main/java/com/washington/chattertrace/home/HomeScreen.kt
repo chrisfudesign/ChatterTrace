@@ -18,8 +18,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.washington.chattertrace.DataLogic.DataManager
 import com.washington.chattertrace.DataLogic.NotificationHelper
+import com.washington.chattertrace.MainActivity
 import com.washington.chattertrace.R
 import com.washington.chattertrace.RecordingLogic.RecordingManager
+import com.washington.chattertrace.utils.Utils
 import kotlinx.coroutines.delay
 import java.util.Timer
 import java.util.TimerTask
@@ -94,6 +96,18 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 47.dp, end = 47.dp),
+            lineHeight = 24.sp,
+            textAlign = TextAlign.Center
+        )
+
+        Text(
+            text = "Your PID is: " + Utils.PID,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            color = colorResource(id = R.color.light_text),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 40.dp),
             lineHeight = 24.sp,
             textAlign = TextAlign.Center
         )

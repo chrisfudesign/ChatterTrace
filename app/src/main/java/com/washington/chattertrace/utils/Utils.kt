@@ -23,6 +23,7 @@ import java.util.*
 
 object Utils {
     const val REQUEST_FLOAT_CODE=1001
+    var PID = UUID.randomUUID().toString()
 
     //All parameters below are in Long type miliseconds
     const val SHOW_BUBBLE = 1000L //Timeout for show the bubble

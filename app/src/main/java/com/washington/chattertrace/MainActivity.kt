@@ -1,7 +1,6 @@
 package com.washington.chattertrace
 
 import android.Manifest
-import android.R
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -9,28 +8,16 @@ import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.os.IBinder
-import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.unit.IntOffset
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
@@ -41,9 +28,11 @@ import com.washington.chattertrace.service.SuspendwindowService
 import com.washington.chattertrace.utils.Utils
 import com.washington.chattertrace.utils.ViewModleMain
 import java.io.IOException
-import kotlin.math.roundToInt
+import java.util.UUID
+
 
 public var recordingManager: RecordingManager? = null
+public var PID: String = ""
 class MainActivity : ComponentActivity() {
     private var floatRootView: View? = null//floating window View
     private var isReceptionShow = false
@@ -56,7 +45,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         context = this;
-
+        if(PID.length == 0){
+            PID = UUID.randomUUID().toString()
+        }
         //The procedure to instantiate the datamanager
         //first call getInstance, then setfoldername, then call Initialize
         dataManager = DataManager.getInstance()
