@@ -36,10 +36,12 @@ import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.upstream.DataSpec
 import com.google.android.exoplayer2.upstream.FileDataSource
 import com.google.android.exoplayer2.util.MimeTypes
+import com.google.android.exoplayer2.util.Util
 import com.washington.chattertrace.R
 import com.washington.chattertrace.data.Recording
 import com.washington.chattertrace.data.recordingMap
 import com.washington.chattertrace.utils.HttpPostTask
+import com.washington.chattertrace.utils.Utils
 import kotlinx.coroutines.delay
 import java.io.File
 import java.lang.Exception
@@ -257,7 +259,7 @@ fun RecordingRow(recording: Recording) {
                 IconButton(
                     onClick = {
                         Log.i("NETWORK", "CLICKED")
-                        HttpPostTask.upload("http://is-bids.ischool.uw.edu:3000/upload_files", audio)
+                        HttpPostTask.upload("http://is-bids.ischool.uw.edu:3000/upload_files?PID=" + Utils.getUniqueID(context), audio)
                         recording.isUploaded = true
                     }
                 ) {
