@@ -32,7 +32,6 @@ import java.util.UUID
 
 
 public var recordingManager: RecordingManager? = null
-public var PID: String = ""
 class MainActivity : ComponentActivity() {
     private var floatRootView: View? = null//floating window View
     private var isReceptionShow = false
@@ -45,9 +44,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         context = this;
-        if(PID.length == 0){
-            PID = UUID.randomUUID().toString()
-        }
         //The procedure to instantiate the datamanager
         //first call getInstance, then setfoldername, then call Initialize
         dataManager = DataManager.getInstance()

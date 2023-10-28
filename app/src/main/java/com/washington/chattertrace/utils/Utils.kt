@@ -5,30 +5,37 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.opengl.Visibility
 import android.os.Build
 import android.os.Handler
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.Toast
-import androidx.annotation.ColorInt
-import androidx.compose.ui.graphics.Color
-import com.washington.chattertrace.R
-import java.util.*
+import java.util.UUID
+
 
 object Utils {
     const val REQUEST_FLOAT_CODE=1001
-    var PID = UUID.randomUUID().toString()
 
     //All parameters below are in Long type miliseconds
     const val SHOW_BUBBLE = 1000L //Timeout for show the bubble
     const val FADE_BUBBLE = 5000L //Timeout for bubble fade to 50% alpha
     const val DISAPPEAR_BUBBLE = 10000L //Timeout for bubble disappear
+
+    fun getUniqueID(context: Context): String? {
+        val sharedPreferences =
+            context.getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE)
+        var uniqueId = sharedPreferences.getString("uniqueId", null)
+        if (uniqueId == null) {
+            // If not already created, then create new ID
+            uniqueId = UUID.randomUUID().toString()
+            val editor = sharedPreferences.edit()
+            editor.putString("uniqueId", uniqueId)
+            editor.apply()
+        }
+        return uniqueId
+    }
+
 
     fun isServiceRunning(context: Context, ServiceName: String): Boolean {
         if (TextUtils.isEmpty(ServiceName)) {

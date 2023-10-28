@@ -11,6 +11,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -96,18 +97,6 @@ fun HomeScreen(recordingManager: RecordingManager?, dataManager: DataManager?) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 47.dp, end = 47.dp),
-            lineHeight = 24.sp,
-            textAlign = TextAlign.Center
-        )
-
-        Text(
-            text = "Your PID is: " + Utils.PID,
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
-            color = colorResource(id = R.color.light_text),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 40.dp),
             lineHeight = 24.sp,
             textAlign = TextAlign.Center
         )
