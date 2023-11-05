@@ -61,13 +61,13 @@ class MainActivity : ComponentActivity() {
             println("NO PERMISSION")
         }
 
-        if(!Utils.isServiceRunning(this, "SuspendwindowService")){
-            startService(Intent(this, SuspendwindowService::class.java))
-            Utils.checkSuspendedWindowPermission(this) {
-                isReceptionShow = true
-                Utils.showBubblewithTimeout(this)
-            }
-        }
+//        if(!Utils.isServiceRunning(this, "SuspendwindowService")){
+//            startService(Intent(this, SuspendwindowService::class.java))
+//            Utils.checkSuspendedWindowPermission(this) {
+//                isReceptionShow = true
+//                Utils.showBubblewithTimeout(this)
+//            }
+//        }
 
 //        setContent {
 //            // create data maps

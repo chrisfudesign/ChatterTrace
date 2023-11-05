@@ -18,9 +18,9 @@ object Utils {
     const val REQUEST_FLOAT_CODE=1001
 
     //All parameters below are in Long type miliseconds
-    const val SHOW_BUBBLE = 1000L //Timeout for show the bubble
-    const val FADE_BUBBLE = 5000L //Timeout for bubble fade to 50% alpha
-    const val DISAPPEAR_BUBBLE = 10000L //Timeout for bubble disappear
+    const val SHOW_BUBBLE = 30000L //Timeout for show the bubble
+    const val FADE_BUBBLE = 300000L //Timeout for bubble fade to 50% alpha
+    const val DISAPPEAR_BUBBLE = 1500000L //Timeout for bubble disappear
 
     fun getUniqueID(context: Context): String? {
         val sharedPreferences =
