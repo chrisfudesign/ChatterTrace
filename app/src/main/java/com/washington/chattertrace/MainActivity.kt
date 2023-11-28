@@ -23,7 +23,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
 import com.washington.chattertrace.DataLogic.DataManager
 import com.washington.chattertrace.RecordingLogic.RecordingManager
-import com.washington.chattertrace.data.dummyDataSetup
+import com.washington.chattertrace.data.recordingDataSetup
 import com.washington.chattertrace.service.SuspendwindowService
 import com.washington.chattertrace.utils.Utils
 import com.washington.chattertrace.utils.ViewModleMain
@@ -61,13 +61,13 @@ class MainActivity : ComponentActivity() {
             println("NO PERMISSION")
         }
 
-//        if(!Utils.isServiceRunning(this, "SuspendwindowService")){
-//            startService(Intent(this, SuspendwindowService::class.java))
-//            Utils.checkSuspendedWindowPermission(this) {
-//                isReceptionShow = true
-//                Utils.showBubblewithTimeout(this)
-//            }
-//        }
+        if(!Utils.isServiceRunning(this, "SuspendwindowService")){
+            startService(Intent(this, SuspendwindowService::class.java))
+            Utils.checkSuspendedWindowPermission(this) {
+                isReceptionShow = true
+                Utils.showBubblewithTimeout(this)
+            }
+        }
 
 //        setContent {
 //            // create data maps
@@ -156,7 +156,7 @@ class MainActivity : ComponentActivity() {
 //            }
             setContent {
                 // create data maps
-                dummyDataSetup()
+                recordingDataSetup()
                 MainScreen(recordingManager = recordingManager, dataManager = dataManager)
             }
         }

@@ -15,7 +15,7 @@ data class RecordingFolder(val recordings: List<Recording>, val date: LocalDate,
 data class Recording(val id: String, val audio: File, var isUploaded: Boolean)
 val recordingMap: HashMap<LocalDate, List<Recording>> = hashMapOf()
 
-fun dummyDataSetup() {
+fun recordingDataSetup() {
     val fileList = File(DIR_PATH).listFiles()
 
     // for each audio, make a recording object and add it to the map

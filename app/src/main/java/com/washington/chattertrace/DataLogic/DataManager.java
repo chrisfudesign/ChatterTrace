@@ -618,7 +618,8 @@ public class DataManager {
 
             //TODO: Currently will cause crash, need repair
             // MainActivityKt.getRecordingManager().StopRecording();
-            if (classificationResult) {
+            if (true) {
+                Log.d("SCREENWAKE", "classification result: ENTERED");
                 NotificationHelper.showNotification(context, "", "It seems that your family member just made a bid for connection, please click this to record a response.");
                 // GET THE LOGIC OF RECORDING 30s+1min CORRECT
                 // Learn how to implement broadcast
