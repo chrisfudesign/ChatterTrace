@@ -1,6 +1,7 @@
 package com.washington.chattertrace.data
 
 import android.os.Environment
+import android.util.Log
 import java.io.File
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -16,6 +17,7 @@ data class Recording(val id: String, val audio: File, var isUploaded: Boolean)
 val recordingMap: HashMap<LocalDate, List<Recording>> = hashMapOf()
 
 fun recordingDataSetup() {
+    recordingMap.clear()
     val fileList = File(DIR_PATH).listFiles()
 
     // for each audio, make a recording object and add it to the map
@@ -25,6 +27,7 @@ fun recordingDataSetup() {
         if(dateString.startsWith("preceding")){
             continue;
         }
+        //Log.d("SCREENWAKE", "recording file: " + file)
         val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
         val localDate = LocalDate.parse(dateString, formatter)
 

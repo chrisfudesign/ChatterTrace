@@ -88,7 +88,7 @@ class SuspendwindowService : LifecycleService() {
         floatRootView?.setOnClickListener {
             if(recordingMap.isNotEmpty()){
                 val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
-                val lastDateString = recordingMap.keys.last().toString().filter { it.isLetterOrDigit() }.format(formatter)
+                val lastDateString = recordingMap.toSortedMap().keys.last().toString().filter { it.isLetterOrDigit() }.format(formatter)
                 //Toast.makeText(this, lastDateString, Toast.LENGTH_LONG).show()
                 ViewModleMain.NavController.value?.navigate("recordingDetail/${lastDateString}")
             }

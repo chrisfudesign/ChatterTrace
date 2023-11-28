@@ -558,7 +558,7 @@ public class DataManager {
                 Log.d("SCREENWAKE", "ALL PASS ");
                 //if should merge files
                 if (merge_with_preceding){
-                    Log.d("SCREENWAKE", "merge with preceding");
+                    Log.d("SCREENWAKE", "merge with preceding: " + mShouldNotKeepBuffer.toString());
                     // we set bfsize - 2 because we want preceding two file clips, as only one preceding might not be long enough
                     float mtime = 0;
                     ArrayList<String> mergelist = new ArrayList<String>();
@@ -569,8 +569,8 @@ public class DataManager {
                         mergelist.add(item.path);
                     }
                     newitem.duration += mtime;
-                    Log.d("SCREENWAKE", mergelist.toString());
-                    Log.d("SCREENWAKE", Arrays.toString(mergelist.toArray(new String[0])));
+                    Log.d("SCREENWAKE", "mergelist: " + mergelist.toString());
+                    Log.d("SCREENWAKE", "mergelist: " + Arrays.toString(mergelist.toArray(new String[0])));
                     if(!mergelist.isEmpty()){
                         MergeThread mtd = new MergeThread(mergelist.toArray(new String[0]));
                         mtd.start();
@@ -600,9 +600,9 @@ public class DataManager {
             mFolderFileList.add(0, newitem);
             new insertAsyncTask(recordItemDAO).execute(newitem);
         } else {
-
             // if should_keep is false, then it is temporary background clips for preceding files
             // we store them in the shouldnotkeepbuffer, and when the buffer is full, we delete the first file
+            Log.d("SCREENWAKE", "add new item to mShouldNotKeepBuffer: " + newitem.toString());
             mShouldNotKeepBuffer.add(newitem);
             new insertAsyncTask(recordItemDAO).execute(newitem);
 

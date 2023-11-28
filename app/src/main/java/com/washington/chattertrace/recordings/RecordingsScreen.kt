@@ -72,7 +72,7 @@ fun FolderList(navController: NavHostController) {
     ) {
         Column {
             var folders = mutableListOf<RecordingFolder>()
-
+            Log.d("SCREENWAKE", "recording file: " + recordingMap.keys)
             for (date in recordingMap.keys) {
                 recordingMap[date]?.let { RecordingFolder(it, date, false) }?.let {
                     folders.add(
@@ -94,6 +94,7 @@ fun FolderList(navController: NavHostController) {
                     textAlign = TextAlign.Center
                 )
             } else {
+                folders.sortByDescending{it.date}
                 folders.forEach { folder ->
                     FolderRow(folder,  navController)
                 }
