@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,14 +22,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
+import androidx.preference.PreferenceManager
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.washington.chattertrace.DataLogic.DataManager
 import com.washington.chattertrace.RecordingLogic.RecordingManager
+import com.washington.chattertrace.data.Recording
 import com.washington.chattertrace.data.recordingDataSetup
+import com.washington.chattertrace.data.recordingMap
 import com.washington.chattertrace.service.SuspendwindowService
 import com.washington.chattertrace.utils.Utils
 import com.washington.chattertrace.utils.ViewModleMain
 import java.io.IOException
-import java.util.UUID
+import java.time.LocalDate
 
 
 public var recordingManager: RecordingManager? = null
@@ -68,7 +74,7 @@ class MainActivity : ComponentActivity() {
                 Utils.showBubblewithTimeout(this)
             }
         }
-
+        
 //        setContent {
 //            // create data maps
 //            dummyDataSetup()
@@ -156,7 +162,7 @@ class MainActivity : ComponentActivity() {
 //            }
             setContent {
                 // create data maps
-                recordingDataSetup()
+                recordingDataSetup(context as MainActivity)
                 MainScreen(recordingManager = recordingManager, dataManager = dataManager)
             }
         }

@@ -56,7 +56,9 @@ object Utils {
     @JvmStatic
     fun showBubblewithTimeout(context: Context?){
         //Show the bubble after timeout
-        recordingDataSetup()
+        if (context != null) {
+            recordingDataSetup(context)
+        }
         Handler().postDelayed({
             ViewModleMain.isShowSuspendWindow.postValue(true)
         }, SHOW_BUBBLE)

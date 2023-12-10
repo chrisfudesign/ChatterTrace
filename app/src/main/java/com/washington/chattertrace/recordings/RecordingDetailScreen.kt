@@ -1,11 +1,11 @@
 package com.washington.chattertrace.recordings
 
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -14,37 +14,27 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Paint
-import androidx.compose.ui.graphics.PaintingStyle
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.preference.PreferenceManager
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.upstream.DataSpec
 import com.google.android.exoplayer2.upstream.FileDataSource
 import com.google.android.exoplayer2.util.MimeTypes
-import com.google.android.exoplayer2.util.Util
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.washington.chattertrace.R
 import com.washington.chattertrace.data.Recording
 import com.washington.chattertrace.data.recordingMap
 import com.washington.chattertrace.utils.HttpPostTask
 import com.washington.chattertrace.utils.Utils
 import kotlinx.coroutines.delay
-import java.io.File
-import java.lang.Exception
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.time.Duration.Companion.seconds
@@ -261,6 +251,24 @@ fun RecordingRow(recording: Recording) {
                         Log.i("NETWORK", "CLICKED")
                         HttpPostTask.upload("http://is-bids.ischool.uw.edu:3000/upload_files?PID=" + Utils.getUniqueID(context), audio)
                         recording.isUploaded = true
+
+                        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+                        val editor: SharedPreferences.Editor = preferences.edit()
+
+                        val current_buffer: String? = preferences.getString("uploadedList", null)
+                        var uploadedList = listOf(recording.id)
+                        val gson = Gson()
+                        if(current_buffer != null){
+                            val type = object : TypeToken<List<String?>?>() {}.type
+                            uploadedList = gson.fromJson<List<String?>?>(current_buffer, type) as List<String>
+                            uploadedList = uploadedList.plus(recording.id)
+                        }
+
+                        val buffer_json = gson.toJson(uploadedList)
+
+                        Log.d("SCREENWAKE", "Saved uploaded recordingMap: " + buffer_json)
+                        editor.putString("uploadedList", buffer_json)
+                        editor.apply()
                     }
                 ) {
                     Icon(
@@ -305,7 +313,7 @@ fun Questionnaire() {
                 fontWeight = FontWeight.Normal,
                 fontSize = 14.sp,
                 color = colorResource(id = R.color.light_text),
-                modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 8.dp,)
+                modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 8.dp)
             )
 
             Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))

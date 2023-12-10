@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -64,7 +65,7 @@ fun RecordingsScreen(navController: NavHostController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FolderList(navController: NavHostController) {
-    recordingDataSetup()
+    recordingDataSetup(LocalContext.current)
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -72,7 +73,7 @@ fun FolderList(navController: NavHostController) {
     ) {
         Column {
             var folders = mutableListOf<RecordingFolder>()
-            Log.d("SCREENWAKE", "recording file: " + recordingMap.keys)
+            //Log.d("SCREENWAKE", "recording file: " + recordingMap.keys)
             for (date in recordingMap.keys) {
                 recordingMap[date]?.let { RecordingFolder(it, date, false) }?.let {
                     folders.add(
