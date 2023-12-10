@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
                 Utils.showBubblewithTimeout(this)
             }
         }
-        
+
 //        setContent {
 //            // create data maps
 //            dummyDataSetup()

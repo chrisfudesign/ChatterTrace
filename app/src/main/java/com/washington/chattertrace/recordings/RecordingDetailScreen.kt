@@ -125,7 +125,7 @@ fun RecordingList(dateString: String) {
 @Composable
 fun RecordingRow(recording: Recording) {
     var audio = recording.audio
-    var isUploaded = recording.isUploaded
+    val isUploaded = remember { mutableStateOf(recording.isUploaded) }
     // State to track the current position of the audio recording
     var currentPosition by rememberSaveable { mutableStateOf(0L) }
 
@@ -239,46 +239,42 @@ fun RecordingRow(recording: Recording) {
             }
         },
         trailingContent = {
-            if (isUploaded) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_uploaded_checkmark),
-                    contentDescription = "Localized description",
-                    tint = Color.Unspecified
-                )
-            } else {
                 IconButton(
                     onClick = {
-                        Log.i("NETWORK", "CLICKED")
-                        HttpPostTask.upload("http://is-bids.ischool.uw.edu:3000/upload_files?PID=" + Utils.getUniqueID(context), audio)
-                        recording.isUploaded = true
+                        if(!isUploaded.value){
+                            Log.i("NETWORK", "CLICKED")
+                            HttpPostTask.upload("http://is-bids.ischool.uw.edu:3000/upload_files?PID=" + Utils.getUniqueID(context), audio)
 
-                        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-                        val editor: SharedPreferences.Editor = preferences.edit()
+                            recording.isUploaded = true
+                            isUploaded.value = true
 
-                        val current_buffer: String? = preferences.getString("uploadedList", null)
-                        var uploadedList = listOf(recording.id)
-                        val gson = Gson()
-                        if(current_buffer != null){
-                            val type = object : TypeToken<List<String?>?>() {}.type
-                            uploadedList = gson.fromJson<List<String?>?>(current_buffer, type) as List<String>
-                            uploadedList = uploadedList.plus(recording.id)
+                            val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+                            val editor: SharedPreferences.Editor = preferences.edit()
+
+                            val current_buffer: String? = preferences.getString("uploadedList", null)
+                            var uploadedList = listOf(recording.id)
+                            val gson = Gson()
+                            if(current_buffer != null){
+                                val type = object : TypeToken<List<String?>?>() {}.type
+                                uploadedList = gson.fromJson<List<String?>?>(current_buffer, type) as List<String>
+                                uploadedList = uploadedList.plus(recording.id)
+                            }
+
+                            val buffer_json = gson.toJson(uploadedList)
+
+                            Log.d("SCREENWAKE", "Saved uploaded recordingMap: " + buffer_json)
+                            editor.putString("uploadedList", buffer_json)
+                            editor.apply()
                         }
-
-                        val buffer_json = gson.toJson(uploadedList)
-
-                        Log.d("SCREENWAKE", "Saved uploaded recordingMap: " + buffer_json)
-                        editor.putString("uploadedList", buffer_json)
-                        editor.apply()
                     }
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_upload),
+                        painter = painterResource(id = if (isUploaded.value) R.drawable.ic_uploaded_checkmark else R.drawable.ic_upload),
                         contentDescription = "Localized description",
                         tint = Color.Unspecified,
                         modifier = Modifier.padding(start = 16.dp),
                     )
                 }
-            }
 
             Icon(
                 painter = painterResource(id = R.drawable.ic_arrow_drop_down_24),
