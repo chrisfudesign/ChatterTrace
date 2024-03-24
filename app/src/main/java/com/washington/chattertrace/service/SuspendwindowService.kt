@@ -5,13 +5,13 @@ import android.graphics.PixelFormat
 import android.os.Build
 import android.os.Handler
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.*
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
 import androidx.lifecycle.LifecycleService
 import com.washington.chattertrace.R
 import com.washington.chattertrace.data.recordingMap
-import com.washington.chattertrace.utils.HttpPostTask
 import com.washington.chattertrace.utils.ItemViewTouchListener
 import com.washington.chattertrace.utils.Utils
 import com.washington.chattertrace.utils.ViewModleMain
@@ -96,19 +96,22 @@ class SuspendwindowService : LifecycleService() {
 
         //Bubble fade after timeout
         Handler().postDelayed({
+            Log.d("SCREENWAKE", "fade bubble")
             bubbleButton?.alpha = 0.3f
         }, Utils.FADE_BUBBLE)
 
         //Bubble disappear after timeout
         Handler().postDelayed({
+            Log.d("SCREENWAKE", "disappear bubble")
             ViewModleMain.isShowSuspendWindow.postValue(false)
             ViewModleMain.isShowWindow.postValue(false)
         }, Utils.DISAPPEAR_BUBBLE)
 
         bubbleClose = floatRootView?.findViewById(R.id.bubble_close)
-        bubbleClose?.setOnClickListener(View.OnClickListener {
+        bubbleClose?.setOnClickListener {
+            Log.d("SCREENWAKE", "clicked close bubble")
             ViewModleMain.isShowSuspendWindow.postValue(false)
             ViewModleMain.isShowWindow.postValue(false)
-        })
+        }
     }
 }
