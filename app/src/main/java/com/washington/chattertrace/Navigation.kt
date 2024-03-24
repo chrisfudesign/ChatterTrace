@@ -39,7 +39,7 @@ fun Navigation(navController: NavHostController, recordingManager: RecordingMana
         composable("recordingDetail/{date}") {
             val date = it.arguments?.getString("date")
             if (date != null) {
-                RecordingDetailScreen(date)
+                RecordingDetailScreen(navController, date)
             }
         }
         composable("reflectionDetail/{date}") {

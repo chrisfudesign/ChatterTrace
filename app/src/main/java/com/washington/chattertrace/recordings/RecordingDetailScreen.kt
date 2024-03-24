@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import androidx.preference.PreferenceManager
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.upstream.DataSpec
@@ -44,7 +45,7 @@ var DIR_PATH = Environment.getExternalStorageDirectory().absolutePath +
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecordingDetailScreen(dateString: String) {
+fun RecordingDetailScreen(navController: NavHostController, dateString: String) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -62,7 +63,7 @@ fun RecordingDetailScreen(dateString: String) {
                 )
             },
             navigationIcon = {
-                IconButton(onClick = { /*navController.popBackStack()*/ }) {
+                IconButton(onClick = { navController.popBackStack() }) {
                     Icon(Icons.Default.ArrowBack, contentDescription = "Back button")
                 }
             },
@@ -89,7 +90,7 @@ fun RecordingDetailScreen(dateString: String) {
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(Color.White)
         )
 
-        RecordingList(dateString)
+        RecordingList(navController, dateString)
 
     }
 }
@@ -100,7 +101,7 @@ fun RecordingDetailScreen(dateString: String) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecordingList(dateString: String) {
+fun RecordingList(navController: NavHostController, dateString: String) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -115,7 +116,7 @@ fun RecordingList(dateString: String) {
                 var filePath = DIR_PATH + recording.audio.name
                 RecordingRow(recording)
             }
-            Questionnaire()
+            Questionnaire(navController)
         }
     }
 }
@@ -288,7 +289,7 @@ fun RecordingRow(recording: Recording) {
 // TODO: turn this function into an activity instead
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Questionnaire() {
+fun Questionnaire(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -413,7 +414,7 @@ fun Questionnaire() {
                         .padding(0.dp, 8.dp)
                 ) {
                     OutlinedButton(
-                        onClick = { /* Handle button click */ },
+                        onClick = { navController.popBackStack() },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = (colorResource(id = R.color.light_surface)),
                             contentColor = colorResource(id = R.color.primary)
@@ -426,7 +427,7 @@ fun Questionnaire() {
                     }
 
                     OutlinedButton(
-                        onClick = { /* Handle button click */ },
+                        onClick = { navController.popBackStack() },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = (colorResource(id = R.color.light_surface)),
                             contentColor = colorResource(id = R.color.primary)
@@ -439,7 +440,7 @@ fun Questionnaire() {
                     }
 
                     Button(
-                        onClick = { /* Handle button click */ },
+                        onClick = { navController.popBackStack() },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = colorResource(id = R.color.primary),
                             contentColor = Color.White,
